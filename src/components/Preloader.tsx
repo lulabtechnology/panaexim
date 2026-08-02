@@ -4,6 +4,8 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 
+const READY_EVENT = "panaexim:ready";
+
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const [removed, setRemoved] = useState(false);
@@ -19,21 +21,26 @@ export function Preloader() {
       // Storage can be unavailable in strict privacy modes.
     }
 
+    document.documentElement.dataset.panaeximReady = "false";
     document.documentElement.classList.add("is-loading");
+
+    const finish = () => {
+      try {
+        window.sessionStorage.setItem("panaexim-preloader-v8", "seen");
+      } catch {
+        // The sequence can finish without storage.
+      }
+      document.documentElement.classList.remove("is-loading");
+      document.documentElement.dataset.panaeximReady = "true";
+      window.dispatchEvent(new CustomEvent(READY_EVENT));
+      setRemoved(true);
+    };
 
     const context = gsap.context(() => {
       const duration = reduceMotion ? 0.12 : hasSeen ? 0.42 : 1.35;
       const timeline = gsap.timeline({
         defaults: { ease: "power3.out" },
-        onComplete: () => {
-          try {
-            window.sessionStorage.setItem("panaexim-preloader-v8", "seen");
-          } catch {
-            // The sequence can finish without storage.
-          }
-          document.documentElement.classList.remove("is-loading");
-          setRemoved(true);
-        },
+        onComplete: finish,
       });
 
       timeline

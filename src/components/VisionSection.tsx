@@ -1,13 +1,14 @@
 import Image from "next/image";
-import type { EventItem, SiteContent } from "@/lib/content";
+import type { EventItem, Locale, SiteContent } from "@/lib/content";
 
 type VisionSectionProps = {
+  locale: Locale;
   about: SiteContent["about"];
   leadership: SiteContent["leadership"];
   events: EventItem[];
 };
 
-export function VisionSection({ about, leadership, events }: VisionSectionProps) {
+export function VisionSection({ locale, about, leadership, events }: VisionSectionProps) {
   return (
     <section className="px-vision" id="panaexim">
       <div className="px-vision-grid">
@@ -30,7 +31,7 @@ export function VisionSection({ about, leadership, events }: VisionSectionProps)
         ))}
       </div>
 
-      <div className="px-vision-logos" aria-label="PanaEXIM events">
+      <div className="px-vision-logos" aria-label={locale === "es" ? "Eventos de PanaEXIM" : "PanaEXIM events"}>
         {events.map((event) => (
           <a key={event.id} href={event.url} target="_blank" rel="noreferrer">
             <span>{event.number}</span>

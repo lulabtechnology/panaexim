@@ -15,10 +15,10 @@ export function ParticipantsTeaser({ locale, participants }: ParticipantsTeaserP
           <span key={index}>P{String(index + 1).padStart(2, "0")}</span>
         ))}
       </div>
-      <div className="participants-lock" aria-hidden="true">
-        <LockKeyhole />
-      </div>
       <div className="container participants-content">
+        <div className="participants-lock" aria-hidden="true">
+          <LockKeyhole />
+        </div>
         <p className="eyebrow">{participants.eyebrow}</p>
         <h2 className="section-title">{participants.title}</h2>
         <p>{participants.body}</p>

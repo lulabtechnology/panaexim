@@ -106,7 +106,10 @@ export type SiteContent = {
     phone: string;
     interest: string;
     message: string;
+    privacyConsent: string;
+    privacyLink: string;
     submit: string;
+    success: string;
     interests: string[];
   };
   footer: {
@@ -317,7 +320,10 @@ export const content: Record<Locale, SiteContent> = {
       phone: "Teléfono / WhatsApp",
       interest: "Motivo de contacto",
       message: "Cuéntenos qué necesita",
+      privacyConsent: "He leído y acepto la",
+      privacyLink: "Política de privacidad",
       submit: "Enviar por WhatsApp",
+      success: "WhatsApp se abrió con la información de su consulta.",
       interests: [
         "Participar como exhibidor",
         "Registrarse como visitante",
@@ -486,7 +492,10 @@ export const content: Record<Locale, SiteContent> = {
       phone: "Phone / WhatsApp",
       interest: "Reason for contact",
       message: "Tell us what you need",
+      privacyConsent: "I have read and accept the",
+      privacyLink: "Privacy policy",
       submit: "Send via WhatsApp",
+      success: "WhatsApp opened with your inquiry details.",
       interests: [
         "Become an exhibitor",
         "Register as a visitor",

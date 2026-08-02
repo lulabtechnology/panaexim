@@ -15,11 +15,6 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "PanaEXIM 2026 — 4 Events. Infinite Opportunities.",
-    template: "%s · PanaEXIM 2026",
-  },
-  description: "PanaEXIM 2026 reúne cuatro exposiciones internacionales del 23 al 26 de noviembre en el Panama Convention Center.",
   openGraph: {
     type: "website",
     siteName: "PanaEXIM 2026",

@@ -24,7 +24,7 @@ const monoFont = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://panaexim.example";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://panaexim.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

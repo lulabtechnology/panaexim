@@ -1,8 +1,24 @@
-# PanaEXIM 2026 — Fase 8
+# PanaEXIM 2026 — Fase 8.1
 
 Web bilingüe oficial de **PanaEXIM 2026 — 4 Events. Infinite Opportunities.**
 
-Esta versión reconstruye la experiencia pública con una dirección cinematográfica y editorial, manteniendo el backend privado, el panel administrativo y la seguridad preparados en la Fase 5.
+Esta versión corrige y estabiliza la experiencia cinematográfica de Fase 8 tras revisar el código y una grabación real en escritorio y vista responsive, manteniendo el backend privado, el panel administrativo y la seguridad preparados en la Fase 5.
+
+
+## Correcciones de Fase 8.1
+
+- El hero ya muestra `PanaEXIM` completo en resoluciones de laptop sin cortar la última letra.
+- La entrada del hero espera la finalización del preloader y tiene una salida de seguridad si el evento no se recibe.
+- El contador deja de heredar la tarjeta redondeada del diseño anterior y evita mostrar cuatro ceros antes de hidratar.
+- El showcase conserva una imagen de respaldo durante las transiciones para eliminar pantallas negras prolongadas.
+- El showcase puede controlarse con scroll, flechas, teclado y arrastre horizontal en escritorio.
+- El carrusel móvil oculta el texto de las escenas inactivas, reduce títulos largos y agrega un indicador táctil de progreso.
+- El candado del área de participantes ya no se superpone al párrafo.
+- La sección de participantes reduce el espacio vacío en móvil.
+- La información de la sede aparece antes del mapa en móvil.
+- El formulario incorpora aceptación obligatoria de privacidad y un estado de envío accesible.
+- Metadatos, Open Graph, idioma, direcciones y etiquetas accesibles se ajustan según ES/EN.
+- El menú móvil puede cerrarse con `Escape` y devuelve el foco al botón.
 
 ## Stack
 
@@ -153,4 +169,4 @@ En Vercel:
 npm run verify
 ```
 
-El workflow `.github/workflows/ci.yml` ejecuta validación estática, TypeScript, ESLint y build. Consulta `VALIDACION-FASE-8.md` para el inventario detallado de pruebas y pendientes.
+El workflow `.github/workflows/ci.yml` ejecuta validación estática, TypeScript, ESLint y build. Consulta `VALIDACION-FASE-8.1.md` para el inventario detallado de pruebas y pendientes.

@@ -1,6 +1,6 @@
 import "server-only";
 
-const FALLBACK_SITE_URL = "https://panaexim.example";
+const FALLBACK_SITE_URL = "https://panaexim.vercel.app";
 
 export function getSiteUrl(): string {
   const explicitUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();

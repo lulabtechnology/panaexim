@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 type CountdownProps = {
   labels: [string, string, string, string];
+  ariaLabel: string;
 };
 
 const target = new Date("2026-11-23T10:00:00-05:00").getTime();
@@ -18,8 +19,8 @@ function calculate() {
   ];
 }
 
-export function Countdown({ labels }: CountdownProps) {
-  const [values, setValues] = useState<number[]>([0, 0, 0, 0]);
+export function Countdown({ labels, ariaLabel }: CountdownProps) {
+  const [values, setValues] = useState<number[] | null>(null);
 
   useEffect(() => {
     setValues(calculate());
@@ -28,13 +29,18 @@ export function Countdown({ labels }: CountdownProps) {
   }, []);
 
   return (
-    <div className="countdown" aria-label="Countdown to PanaEXIM 2026">
-      {labels.map((label, index) => (
-        <div className="countdown-unit" key={label}>
-          <strong>{String(values[index] ?? 0).padStart(2, "0")}</strong>
-          <span>{label}</span>
-        </div>
-      ))}
+    <div className="countdown" role="timer" aria-label={ariaLabel} aria-live="off">
+      {labels.map((label, index) => {
+        const value = values?.[index];
+        return (
+          <div className="countdown-unit" key={label}>
+            <strong aria-label={value === undefined ? undefined : `${value} ${label}`}>
+              {value === undefined ? "—" : String(value).padStart(2, "0")}
+            </strong>
+            <span>{label}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

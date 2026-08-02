@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Building2, Mail, MessageCircle, Phone, Send } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import type { Locale, SiteContent } from "@/lib/content";
 
 type ContactSectionProps = {
@@ -11,7 +13,6 @@ type ContactSectionProps = {
 
 export function ContactSection({ locale, contact }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
-  const spanish = locale === "es";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,8 +78,9 @@ export function ContactSection({ locale, contact }: ContactSectionProps) {
               <div>
                 <h3>{contact.address}</h3>
                 <p>
-                  Panama Pacifico International Business Center, Edificio 3485, Oficina 102,
-                  Free Zone, Ciudad de Panamá, Panamá.
+                  {locale === "es"
+                    ? "Panama Pacifico International Business Center, Edificio 3485, Oficina 102, Free Zone, Ciudad de Panamá, Panamá."
+                    : "Panama Pacifico International Business Center, Building 3485, Office 102, Free Zone, Panama City, Panama."}
                 </p>
               </div>
             </article>
@@ -127,15 +129,24 @@ export function ContactSection({ locale, contact }: ContactSectionProps) {
             </label>
           </div>
 
+          <label className="form-consent">
+            <input name="privacy" type="checkbox" required />
+            <span>
+              {contact.privacyConsent}{" "}
+              <Link href={`/${locale}/privacy`} target="_blank" rel="noreferrer">{contact.privacyLink}</Link>.
+            </span>
+          </label>
+
           <button type="submit" className="button button-gold form-submit">
             {contact.submit}
             <Send aria-hidden="true" />
           </button>
-          <p className={`form-status ${submitted ? "is-visible" : ""}`} aria-live="polite">
-            {spanish
-              ? "WhatsApp se abrió con la información de su consulta."
-              : "WhatsApp opened with your inquiry details."}
-          </p>
+
+          {submitted ? (
+            <p className="form-status is-visible" role="status" aria-live="polite">
+              {contact.success}
+            </p>
+          ) : null}
         </form>
       </div>
     </section>

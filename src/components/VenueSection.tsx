@@ -1,11 +1,12 @@
 import { ArrowUpRight, Building2, Car, Hotel, Plane } from "lucide-react";
-import type { SiteContent } from "@/lib/content";
+import type { Locale, SiteContent } from "@/lib/content";
 
 type VenueSectionProps = {
+  locale: Locale;
   venue: SiteContent["venue"];
 };
 
-export function VenueSection({ venue }: VenueSectionProps) {
+export function VenueSection({ locale, venue }: VenueSectionProps) {
   return (
     <section className="section venue-section" id="venue">
       <div className="container venue-grid">
@@ -56,11 +57,11 @@ export function VenueSection({ venue }: VenueSectionProps) {
             </span>
             <div>
               <strong>Panama Convention Center</strong>
-              <small>Amador · Ciudad de Panamá</small>
+              <small>{locale === "es" ? "Amador · Ciudad de Panamá" : "Amador · Panama City"}</small>
             </div>
           </div>
           <iframe
-            title="Panama Convention Center map"
+            title={locale === "es" ? "Mapa del Panama Convention Center" : "Panama Convention Center map"}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Panama+Convention+Center&output=embed"

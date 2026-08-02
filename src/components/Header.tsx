@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Locale, SiteContent } from "@/lib/content";
 
 type HeaderProps = {
@@ -14,6 +14,8 @@ type HeaderProps = {
 export function Header({ locale, navigation }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const mobileMenu = useRef<HTMLDivElement>(null);
   const otherLocale = locale === "es" ? "en" : "es";
 
   useEffect(() => {
@@ -24,9 +26,52 @@ export function Header({ locale, navigation }: HeaderProps) {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = open ? "hidden" : previousOverflow;
+
+    if (open) {
+      window.requestAnimationFrame(() => {
+        mobileMenu.current?.querySelector<HTMLElement>("a[href]")?.focus();
+      });
+    }
+
+    function handleMenuKeyboard(event: KeyboardEvent) {
+      if (!open) return;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        window.requestAnimationFrame(() => menuButton.current?.focus());
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const menuItems = Array.from(
+        mobileMenu.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+      const focusable = [menuButton.current, ...menuItems].filter(
+        (item): item is HTMLElement => Boolean(item),
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleMenuKeyboard);
     return () => {
-      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleMenuKeyboard);
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
@@ -59,13 +104,14 @@ export function Header({ locale, navigation }: HeaderProps) {
         </nav>
 
         <div className="px-header-actions">
-          <Link className="px-language" href={`/${otherLocale}`}>{otherLocale.toUpperCase()}</Link>
+          <Link className="px-language" href={`/${otherLocale}`} aria-label={locale === "es" ? "Cambiar a inglés" : "Switch to Spanish"}>{otherLocale.toUpperCase()}</Link>
           <Link className="px-header-cta" href="#contact">
             {navigation.exhibitor}
             <ArrowUpRight aria-hidden="true" />
           </Link>
           <button
             type="button"
+            ref={menuButton}
             className="px-menu-button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
@@ -77,7 +123,16 @@ export function Header({ locale, navigation }: HeaderProps) {
         </div>
       </div>
 
-      <div id="px-mobile-navigation" className={`px-mobile-menu ${open ? "is-open" : ""}`} aria-hidden={!open} inert={open ? undefined : true}>
+      <div
+        id="px-mobile-navigation"
+        ref={mobileMenu}
+        className={`px-mobile-menu ${open ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={locale === "es" ? "Menú de navegación" : "Navigation menu"}
+        aria-hidden={!open}
+        inert={open ? undefined : true}
+      >
         <div className="px-mobile-menu-head">
           <span>{locale === "es" ? "Navegación" : "Navigation"}</span>
           <small>PanaEXIM 2026</small>
