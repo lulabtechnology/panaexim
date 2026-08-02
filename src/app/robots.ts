@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://panaexim.example";
+  const baseUrl = getSiteUrl();
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/es/participants", "/en/participants"] }],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/es/participants", "/en/participants", "/es/admin", "/en/admin"] }],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

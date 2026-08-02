@@ -2,15 +2,16 @@
 
 import { Building2, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import { FormEvent, useState } from "react";
-import type { SiteContent } from "@/lib/content";
+import type { Locale, SiteContent } from "@/lib/content";
 
 type ContactSectionProps = {
+  locale: Locale;
   contact: SiteContent["contact"];
 };
 
-export function ContactSection({ contact }: ContactSectionProps) {
+export function ContactSection({ locale, contact }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
-  const spanish = contact.submit.includes("WhatsApp");
+  const spanish = locale === "es";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -1,8 +1,9 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Database, ShieldCheck } from "lucide-react";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { ParticipantDirectory } from "@/components/ParticipantDirectory";
 import { ParticipantsLogin } from "@/components/ParticipantsLogin";
 import { ParticipantsLogout } from "@/components/ParticipantsLogout";
 import { content, isLocale } from "@/lib/content";
@@ -11,13 +12,11 @@ import {
   PARTICIPANTS_COOKIE,
   verifySessionToken,
 } from "@/lib/participants-auth";
+import { getPublishedParticipants } from "@/lib/participants";
+import { isSupabaseServiceConfigured } from "@/lib/supabase/config";
 
-const eventGroups = [
-  { name: "Panama Jewellery Show", logo: "/media/logos/panama-jewellery-show.png" },
-  { name: "PanaCosmetica", logo: "/media/logos/panacosmetica.svg" },
-  { name: "PanaDefensa International", logo: "/media/logos/panadefensa.png" },
-  { name: "PanaEnergy", logo: "/media/logos/panaenergy.svg" },
-];
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 type ParticipantsPageProps = {
   params: Promise<{ locale: string }>;
@@ -26,11 +25,16 @@ type ParticipantsPageProps = {
 export default async function ParticipantsPage({ params }: ParticipantsPageProps) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
+
   const locale = rawLocale;
   const copy = content[locale];
   const cookieStore = await cookies();
-  const authenticated = verifySessionToken(cookieStore.get(PARTICIPANTS_COOKIE)?.value);
+  const authenticated = verifySessionToken(
+    cookieStore.get(PARTICIPANTS_COOKIE)?.value,
+  );
   const spanish = locale === "es";
+  const participants = authenticated ? await getPublishedParticipants() : [];
+  const supabaseConfigured = isSupabaseServiceConfigured();
 
   return (
     <main className="participants-page">
@@ -42,7 +46,10 @@ export default async function ParticipantsPage({ params }: ParticipantsPageProps
         </Link>
 
         {!authenticated ? (
-          <ParticipantsLogin locale={locale} configured={isParticipantsAuthConfigured()} />
+          <ParticipantsLogin
+            locale={locale}
+            configured={isParticipantsAuthConfigured()}
+          />
         ) : (
           <section className="participants-vault">
             <header>
@@ -51,8 +58,8 @@ export default async function ParticipantsPage({ params }: ParticipantsPageProps
                 <h1>{copy.participants.title}</h1>
                 <p>
                   {spanish
-                    ? "La estructura segura del directorio ya está funcionando. Los logotipos reales se conectarán en la siguiente fase mediante Supabase."
-                    : "The secure directory structure is working. Real participant logos will be connected in the next phase through Supabase."}
+                    ? "Directorio privado de empresas confirmadas en el ecosistema PanaEXIM 2026."
+                    : "Private directory of confirmed companies across the PanaEXIM 2026 ecosystem."}
                 </p>
               </div>
               <ParticipantsLogout locale={locale} />
@@ -60,27 +67,34 @@ export default async function ParticipantsPage({ params }: ParticipantsPageProps
 
             <div className="vault-status">
               <ShieldCheck aria-hidden="true" />
-              <span>{spanish ? "Sesión privada verificada" : "Private session verified"}</span>
+              <span>
+                {spanish ? "Sesión privada verificada" : "Private session verified"}
+              </span>
             </div>
 
-            <div className="participant-groups">
-              {eventGroups.map((group, groupIndex) => (
-                <article key={group.name} className="participant-group">
-                  <div className="participant-group-heading">
-                    <Image src={group.logo} alt={group.name} width={220} height={88} />
-                    <strong>{group.name}</strong>
-                  </div>
-                  <div className="participant-preview-grid">
-                    {Array.from({ length: 4 }).map((_, index) => (
-                      <div className="participant-placeholder" key={index}>
-                        <span>P{groupIndex + 1}{index + 1}</span>
-                        <small>{spanish ? "Espacio de logo" : "Logo slot"}</small>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
+            {!supabaseConfigured ? (
+              <div className="directory-setup-state">
+                <Database aria-hidden="true" />
+                <h2>{spanish ? "Supabase aún no está conectado" : "Supabase is not connected yet"}</h2>
+                <p>
+                  {spanish
+                    ? "La seguridad del acceso ya funciona. Añade las variables de Supabase y ejecuta la migración incluida para cargar participantes reales desde el panel administrativo."
+                    : "Access security is already working. Add the Supabase variables and run the included migration to load real participants from the admin dashboard."}
+                </p>
+              </div>
+            ) : participants.length ? (
+              <ParticipantDirectory locale={locale} participants={participants} />
+            ) : (
+              <div className="directory-setup-state">
+                <Database aria-hidden="true" />
+                <h2>{spanish ? "Directorio preparado" : "Directory ready"}</h2>
+                <p>
+                  {spanish
+                    ? "Todavía no hay participantes publicados. El equipo puede cargarlos y ordenarlos desde el panel administrativo."
+                    : "No participants are published yet. The team can upload and organize them from the admin dashboard."}
+                </p>
+              </div>
+            )}
           </section>
         )}
       </div>

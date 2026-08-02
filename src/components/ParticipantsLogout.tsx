@@ -11,9 +11,12 @@ export function ParticipantsLogout({ locale }: { locale: Locale }) {
 
   async function logout() {
     setLoading(true);
-    await fetch("/api/participants/logout", { method: "POST" });
-    router.refresh();
-    setLoading(false);
+    try {
+      await fetch("/api/participants/logout", { method: "POST" });
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

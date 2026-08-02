@@ -6,9 +6,10 @@ import gsap from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import { Observer } from "gsap/dist/Observer";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { EventItem, SiteContent } from "@/lib/content";
+import type { EventItem, Locale, SiteContent } from "@/lib/content";
 
 type EventCarouselProps = {
+  locale: Locale;
   heading: SiteContent["eventsHeading"];
   events: EventItem[];
 };
@@ -20,7 +21,7 @@ function circularDistance(index: number, active: number, length: number) {
   return distance;
 }
 
-export function EventCarousel({ heading, events }: EventCarouselProps) {
+export function EventCarousel({ locale, heading, events }: EventCarouselProps) {
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
   const root = useRef<HTMLElement>(null);
@@ -123,6 +124,7 @@ export function EventCarousel({ heading, events }: EventCarouselProps) {
   }, [active, events.length]);
 
   const current = events[active];
+  const spanish = locale === "es";
 
   return (
     <section
@@ -152,7 +154,24 @@ export function EventCarousel({ heading, events }: EventCarouselProps) {
       </div>
 
       <div className="carousel-shell">
-        <div className="carousel-stage" ref={stage}>
+        <div
+          className="carousel-stage"
+          ref={stage}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={spanish ? "Eventos PanaEXIM" : "PanaEXIM events"}
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft") {
+              event.preventDefault();
+              go(-1);
+            }
+            if (event.key === "ArrowRight") {
+              event.preventDefault();
+              go(1);
+            }
+          }}
+        >
           {events.map((event, index) => {
             const isActive = index === active;
             return (
@@ -216,10 +235,10 @@ export function EventCarousel({ heading, events }: EventCarouselProps) {
             <small>{String(events.length).padStart(2, "0")}</small>
           </div>
           <div className="carousel-buttons">
-            <button type="button" onClick={() => go(-1)} aria-label="Previous event">
+            <button type="button" onClick={() => go(-1)} aria-label={spanish ? "Evento anterior" : "Previous event"}>
               <ArrowLeft aria-hidden="true" />
             </button>
-            <button type="button" onClick={() => go(1)} aria-label="Next event">
+            <button type="button" onClick={() => go(1)} aria-label={spanish ? "Evento siguiente" : "Next event"}>
               <ArrowRight aria-hidden="true" />
             </button>
           </div>

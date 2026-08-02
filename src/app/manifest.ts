@@ -11,9 +11,16 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0a1220",
     icons: [
       {
-        src: "/media/logos/panaexim-emblem.png",
-        sizes: "290x230",
+        src: "/media/logos/panaexim-icon-192.png",
+        sizes: "192x192",
         type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/media/logos/panaexim-icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
       },
     ],
   };

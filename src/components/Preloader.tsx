@@ -11,12 +11,22 @@ export function Preloader() {
   useEffect(() => {
     if (!root.current) return;
 
-    const hasSeen = window.sessionStorage.getItem("panaexim-preloader") === "seen";
-    const duration = hasSeen ? 0.45 : 1.65;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let hasSeen = false;
+    try {
+      hasSeen = window.sessionStorage.getItem("panaexim-preloader") === "seen";
+    } catch {
+      // Storage can be unavailable in strict privacy modes.
+    }
+    const duration = reduceMotion ? 0.12 : hasSeen ? 0.45 : 1.65;
     const context = gsap.context(() => {
       const timeline = gsap.timeline({
         onComplete: () => {
-          window.sessionStorage.setItem("panaexim-preloader", "seen");
+          try {
+            window.sessionStorage.setItem("panaexim-preloader", "seen");
+          } catch {
+            // The preloader can still complete when session storage is blocked.
+          }
           setRemoved(true);
         },
       });
@@ -43,7 +53,7 @@ export function Preloader() {
           yPercent: -100,
           duration: duration * 0.45,
           ease: "power4.inOut",
-          delay: hasSeen ? 0 : 0.15,
+          delay: reduceMotion || hasSeen ? 0 : 0.15,
         });
     }, root);
 

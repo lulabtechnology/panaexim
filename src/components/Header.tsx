@@ -57,7 +57,10 @@ export function Header({ locale, navigation }: HeaderProps) {
           </span>
         </Link>
 
-        <nav className="desktop-nav" aria-label="Main navigation">
+        <nav
+          className="desktop-nav"
+          aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}
+        >
           {links.map(([label, href]) => (
             <Link key={href} href={href}>
               {label}
@@ -77,16 +80,28 @@ export function Header({ locale, navigation }: HeaderProps) {
             className="menu-button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            aria-label={navigation.menu}
+            aria-controls="mobile-navigation"
+            aria-label={
+              open
+                ? locale === "es"
+                  ? "Cerrar menú"
+                  : "Close menu"
+                : navigation.menu
+            }
           >
             {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      <div className={`mobile-menu ${open ? "is-open" : ""}`} aria-hidden={!open}>
+      <div
+        id="mobile-navigation"
+        className={`mobile-menu ${open ? "is-open" : ""}`}
+        aria-hidden={!open}
+        inert={open ? undefined : true}
+      >
         <div className="mobile-menu-glow" />
-        <nav aria-label="Mobile navigation">
+        <nav aria-label={locale === "es" ? "Navegación móvil" : "Mobile navigation"}>
           {links.map(([label, href], index) => (
             <Link
               key={href}

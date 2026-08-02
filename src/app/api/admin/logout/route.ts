@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { PARTICIPANTS_COOKIE } from "@/lib/participants-auth";
+import { createClient } from "@/lib/supabase/server";
+import { isSupabasePublicConfigured } from "@/lib/supabase/config";
 import { isTrustedMutationRequest } from "@/lib/request-security";
 
 export async function POST(request: Request) {
@@ -7,17 +8,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Untrusted request origin." }, { status: 403 });
   }
 
-  const response = NextResponse.json(
+  if (isSupabasePublicConfigured()) {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+  }
+
+  return NextResponse.json(
     { ok: true },
     { headers: { "Cache-Control": "no-store" } },
   );
-  response.cookies.set(PARTICIPANTS_COOKIE, "", {
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    priority: "high",
-    maxAge: 0,
-  });
-  return response;
 }

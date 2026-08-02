@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { LeadershipSection } from "@/components/LeadershipSection";
-import { LocaleDocument } from "@/components/LocaleDocument";
 import { OpportunitiesSection } from "@/components/OpportunitiesSection";
 import { ParticipantsTeaser } from "@/components/ParticipantsTeaser";
 import { Preloader } from "@/components/Preloader";
@@ -26,7 +25,6 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale } = await params;
   const spanish = locale === "es";
   return {
-    title: spanish ? "PanaEXIM 2026" : "PanaEXIM 2026",
     description: spanish
       ? "Cuatro exposiciones internacionales convergen en Panamá del 23 al 26 de noviembre de 2026."
       : "Four international exhibitions converge in Panama from November 23–26, 2026.",
@@ -71,18 +69,17 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <>
-      <LocaleDocument locale={rawLocale} />
       <Preloader />
       <Header locale={rawLocale} navigation={copy.navigation} />
       <main>
         <Hero hero={copy.hero} />
         <AboutSection about={copy.about} />
-        <EventCarousel heading={copy.eventsHeading} events={copy.events} />
+        <EventCarousel locale={rawLocale} heading={copy.eventsHeading} events={copy.events} />
         <OpportunitiesSection locale={rawLocale} opportunities={copy.opportunities} />
         <LeadershipSection leadership={copy.leadership} />
         <ParticipantsTeaser locale={rawLocale} participants={copy.participants} />
         <VenueSection venue={copy.venue} />
-        <ContactSection contact={copy.contact} />
+        <ContactSection locale={rawLocale} contact={copy.contact} />
       </main>
       <Footer locale={rawLocale} footer={copy.footer} />
       <script

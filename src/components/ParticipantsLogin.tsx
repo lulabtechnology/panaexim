@@ -59,8 +59,8 @@ export function ParticipantsLogin({ locale, configured }: ParticipantsLoginProps
           <KeyRound aria-hidden="true" />
           <span>
             {spanish
-              ? "Configure PARTICIPANTS_ACCESS_PASSWORD y PARTICIPANTS_SESSION_SECRET en Vercel para activar el acceso."
-              : "Configure PARTICIPANTS_ACCESS_PASSWORD and PARTICIPANTS_SESSION_SECRET in Vercel to activate access."}
+              ? "Configure PARTICIPANTS_SESSION_SECRET y la contraseña temporal, o conecte Supabase para definirla desde el panel."
+              : "Configure PARTICIPANTS_SESSION_SECRET and the temporary password, or connect Supabase to define it from the dashboard."}
           </span>
         </div>
       ) : (
@@ -75,6 +75,7 @@ export function ParticipantsLogin({ locale, configured }: ParticipantsLoginProps
               name="password"
               type="password"
               autoComplete="current-password"
+              maxLength={128}
               required
             />
           </div>
