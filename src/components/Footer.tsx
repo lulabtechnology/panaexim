@@ -20,10 +20,10 @@ export function Footer({ locale, footer }: FooterProps) {
       <div className="container footer-grid">
         <div className="footer-brand">
           <Image
-            src="/media/logos/panaexim-original.png"
+            src="/media/phase8/logos/panaexim-gold.png"
             alt="PanaEXIM"
-            width={180}
-            height={180}
+            width={1285}
+            height={506}
           />
           <p>{footer.description}</p>
           <strong>23–26 NOV 2026</strong>

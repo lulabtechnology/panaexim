@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Locale, SiteContent } from "@/lib/content";
 
@@ -17,7 +17,7 @@ export function Header({ locale, navigation }: HeaderProps) {
   const otherLocale = locale === "es" ? "en" : "es";
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 36);
+    const update = () => setScrolled(window.scrollY > 48);
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
@@ -31,91 +31,69 @@ export function Header({ locale, navigation }: HeaderProps) {
   }, [open]);
 
   const links = [
-    [navigation.about, "#panaexim"],
     [navigation.events, "#events"],
+    [navigation.about, "#panaexim"],
     [navigation.participants, `/${locale}/participants`],
     [navigation.venue, "#venue"],
     [navigation.contact, "#contact"],
   ] as const;
 
   return (
-    <header className={`site-header ${scrolled || open ? "is-solid" : ""}`}>
-      <div className="site-header-inner">
-        <Link href={`/${locale}`} className="brand" aria-label="PanaEXIM 2026">
-          <span className="brand-emblem">
-            <Image
-              src="/media/logos/panaexim-emblem.png"
-              alt=""
-              width={58}
-              height={46}
-              priority
-            />
-          </span>
-          <span className="brand-wordmark">
-            <strong>PanaEXIM</strong>
-            <small>2026</small>
-          </span>
+    <header className={`px-header ${scrolled || open ? "is-solid" : ""}`}>
+      <div className="px-header-inner">
+        <Link href={`/${locale}`} className="px-brand" aria-label="PanaEXIM 2026">
+          <Image
+            src="/media/phase8/logos/panaexim-gold.png"
+            alt="PanaEXIM"
+            width={1285}
+            height={506}
+            priority
+          />
+          <span>2026</span>
         </Link>
 
-        <nav
-          className="desktop-nav"
-          aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}
-        >
+        <nav className="px-desktop-nav" aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}>
           {links.map(([label, href]) => (
-            <Link key={href} href={href}>
-              {label}
-            </Link>
+            <Link key={href} href={href}>{label}</Link>
           ))}
         </nav>
 
-        <div className="header-actions">
-          <Link className="language-link" href={`/${otherLocale}`}>
-            {otherLocale.toUpperCase()}
-          </Link>
-          <Link className="button button-small button-gold desktop-cta" href="#contact">
+        <div className="px-header-actions">
+          <Link className="px-language" href={`/${otherLocale}`}>{otherLocale.toUpperCase()}</Link>
+          <Link className="px-header-cta" href="#contact">
             {navigation.exhibitor}
+            <ArrowUpRight aria-hidden="true" />
           </Link>
           <button
             type="button"
-            className="menu-button"
+            className="px-menu-button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            aria-controls="mobile-navigation"
-            aria-label={
-              open
-                ? locale === "es"
-                  ? "Cerrar menú"
-                  : "Close menu"
-                : navigation.menu
-            }
+            aria-controls="px-mobile-navigation"
+            aria-label={open ? (locale === "es" ? "Cerrar menú" : "Close menu") : navigation.menu}
           >
             {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      <div
-        id="mobile-navigation"
-        className={`mobile-menu ${open ? "is-open" : ""}`}
-        aria-hidden={!open}
-        inert={open ? undefined : true}
-      >
-        <div className="mobile-menu-glow" />
-        <nav aria-label={locale === "es" ? "Navegación móvil" : "Mobile navigation"}>
+      <div id="px-mobile-navigation" className={`px-mobile-menu ${open ? "is-open" : ""}`} aria-hidden={!open} inert={open ? undefined : true}>
+        <div className="px-mobile-menu-head">
+          <span>{locale === "es" ? "Navegación" : "Navigation"}</span>
+          <small>PanaEXIM 2026</small>
+        </div>
+        <nav>
           {links.map(([label, href], index) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              style={{ "--menu-index": index } as React.CSSProperties}
-            >
+            <Link key={href} href={href} onClick={() => setOpen(false)}>
               <span>0{index + 1}</span>
-              {label}
+              <strong>{label}</strong>
+              <ArrowUpRight aria-hidden="true" />
             </Link>
           ))}
         </nav>
-        <Link className="button button-gold" href="#contact" onClick={() => setOpen(false)}>
+        <Link className="px-mobile-cta" href="#contact" onClick={() => setOpen(false)}>
           {navigation.exhibitor}
+          <ArrowUpRight aria-hidden="true" />
         </Link>
       </div>
     </header>

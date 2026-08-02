@@ -1,77 +1,47 @@
 "use client";
 
-import { ArrowDown, ArrowRight, CalendarDays, MapPin } from "lucide-react";
+import Image from "next/image";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useEffect, useRef } from "react";
-import type { SiteContent } from "@/lib/content";
+import type { EventItem, SiteContent } from "@/lib/content";
 import { Countdown } from "@/components/Countdown";
 
 type HeroProps = {
   hero: SiteContent["hero"];
+  events: EventItem[];
 };
 
-const panelCount = 7;
-
-export function Hero({ hero }: HeroProps) {
+export function Hero({ hero, events }: HeroProps) {
   const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!root.current) return;
     gsap.registerPlugin(ScrollTrigger);
-
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) return;
 
     const context = gsap.context(() => {
-      const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
-
+      const timeline = gsap.timeline({ defaults: { ease: "power4.out" }, delay: 0.1 });
       timeline
-        .fromTo(
-          ".hero-panel",
-          { clipPath: "inset(0 50% 0 50%)", scale: 1.12 },
-          {
-            clipPath: "inset(0 0% 0 0%)",
-            scale: 1,
-            duration: 1.45,
-            stagger: { amount: 0.38, from: "center" },
-          },
-        )
-        .fromTo(
-          ".hero-reveal",
-          { yPercent: 115, autoAlpha: 0 },
-          { yPercent: 0, autoAlpha: 1, duration: 0.9, stagger: 0.08 },
-          "-=0.72",
-        )
-        .fromTo(
-          ".countdown-unit",
-          { y: 30, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, duration: 0.65, stagger: 0.07 },
-          "-=0.45",
-        );
+        .fromTo(".px-hero-line", { scaleY: 0 }, { scaleY: 1, duration: 0.9 })
+        .fromTo(".px-hero-reveal", { yPercent: 115, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.95, stagger: 0.075 }, "-=0.62")
+        .fromTo(".px-hero-sector", { clipPath: "inset(0 50% 0 50%)", scale: 1.12 }, { clipPath: "inset(0 0% 0 0%)", scale: 1, duration: 1.2, stagger: 0.1 }, "-=0.8")
+        .fromTo(".px-hero-sector-meta", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.65, stagger: 0.08 }, "-=0.55")
+        .fromTo(".px-countdown-bar", { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.8 }, "-=0.5");
 
-      gsap.to(".hero-panels", {
-        yPercent: 12,
-        scale: 1.045,
+      gsap.to(".px-hero-visual", {
+        yPercent: 9,
+        scale: 1.035,
         ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
+        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: 1 },
       });
-
-      gsap.to(".hero-content", {
-        yPercent: 18,
-        autoAlpha: 0.2,
+      gsap.to(".px-hero-copy", {
+        yPercent: 12,
+        autoAlpha: 0.15,
         ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "38% top",
-          end: "bottom top",
-          scrub: 1,
-        },
+        scrollTrigger: { trigger: root.current, start: "35% top", end: "bottom top", scrub: 1 },
       });
     }, root);
 
@@ -79,64 +49,59 @@ export function Hero({ hero }: HeroProps) {
   }, []);
 
   return (
-    <section className="hero" ref={root} aria-labelledby="hero-title">
-      <div className="hero-panels" aria-hidden="true">
-        {Array.from({ length: panelCount }).map((_, index) => (
-          <div
-            className="hero-panel"
-            key={index}
-            style={
-              {
-                "--panel-index": index,
-                "--panel-position": `${(index / (panelCount - 1)) * 100}%`,
-              } as React.CSSProperties
-            }
-          />
+    <section className="px-hero" ref={root} aria-labelledby="hero-title">
+      <span className="px-hero-line" aria-hidden="true" />
+      <div className="px-hero-copy">
+        <div className="px-hero-copy-inner">
+          <div className="px-hero-overline px-hero-reveal">4 Events. Infinite Opportunities.</div>
+          <h1 id="hero-title">
+            <span className="px-hero-reveal">PanaEXIM</span>
+            <span className="px-hero-reveal">2026</span>
+          </h1>
+          <p className="px-hero-description px-hero-reveal">{hero.description}</p>
+          <div className="px-hero-date px-hero-reveal">
+            <strong>23—26 NOV 2026</strong>
+            <span>Panama Convention Center</span>
+          </div>
+          <a className="px-text-link px-hero-reveal" href="#events">
+            {hero.secondaryCta}
+            <ArrowUpRight aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+
+      <div className="px-hero-visual" aria-label="PanaEXIM events">
+        {events.map((event, index) => (
+          <a
+            href="#events"
+            className={`px-hero-sector px-hero-sector-${event.id}`}
+            key={event.id}
+            style={{ "--sector-accent": event.accent } as React.CSSProperties}
+            aria-label={event.name}
+          >
+            <Image
+              src={event.heroImage}
+              alt=""
+              fill
+              sizes="(min-width: 1100px) 17vw, 25vw"
+              priority
+            />
+            <span className="px-hero-sector-scrim" />
+            <div className="px-hero-sector-meta">
+              <small>{event.number} / 04</small>
+              <strong>{event.name}</strong>
+            </div>
+          </a>
         ))}
       </div>
-      <div className="hero-scrim" />
-      <div className="hero-grid" aria-hidden="true" />
 
-      <div className="hero-content container-wide">
-        <div className="hero-copy">
-          <div className="eyebrow hero-reveal">{hero.eyebrow}</div>
-          <h1 id="hero-title" className="hero-title">
-            <span className="hero-reveal">{hero.title}</span>
-          </h1>
-          <p className="hero-tagline hero-reveal">{hero.tagline}</p>
-          <p className="hero-description hero-reveal">{hero.description}</p>
-
-          <div className="hero-details hero-reveal">
-            <span>
-              <CalendarDays aria-hidden="true" />
-              {hero.date}
-            </span>
-            <span>
-              <MapPin aria-hidden="true" />
-              {hero.venue}
-            </span>
-          </div>
-
-          <div className="hero-actions hero-reveal">
-            <a className="button button-gold" href="#contact">
-              {hero.primaryCta}
-              <ArrowRight aria-hidden="true" />
-            </a>
-            <a className="button button-ghost" href="#events">
-              {hero.secondaryCta}
-            </a>
-          </div>
-        </div>
-
-        <div className="hero-countdown-wrap hero-reveal">
-          <Countdown labels={hero.countdown} />
-        </div>
+      <div className="px-countdown-bar">
+        <span className="px-countdown-label">{hero.eyebrow}</span>
+        <Countdown labels={hero.countdown} />
+        <a href="#events" aria-label={hero.scroll}>
+          <ArrowDown aria-hidden="true" />
+        </a>
       </div>
-
-      <a href="#panaexim" className="hero-scroll">
-        <span>{hero.scroll}</span>
-        <ArrowDown aria-hidden="true" />
-      </a>
     </section>
   );
 }

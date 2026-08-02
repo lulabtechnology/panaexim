@@ -16,6 +16,7 @@ export type EventItem = {
   url: string;
   image: string;
   mobileImage: string;
+  heroImage: string;
   logo: string;
   accent: string;
   accentSoft: string;
@@ -124,9 +125,10 @@ const sharedEvents = {
     id: "jewellery" as const,
     number: "01",
     url: "https://panamajewelryshow.com/",
-    image: "/media/events/jewellery.webp",
-    mobileImage: "/media/events/jewellery-mobile.webp",
-    logo: "/media/logos/panama-jewellery-show.png",
+    image: "/media/phase8/events/jewellery.webp",
+    mobileImage: "/media/phase8/events/jewellery-mobile.webp",
+    heroImage: "/media/phase8/hero/jewellery-strip.webp",
+    logo: "/media/phase8/logos/pjs-gold.png",
     accent: "#dfbd67",
     accentSoft: "rgba(223,189,103,.24)",
   },
@@ -134,9 +136,10 @@ const sharedEvents = {
     id: "cosmetica" as const,
     number: "02",
     url: "https://panacosmetica.com/",
-    image: "/media/events/cosmetica.webp",
-    mobileImage: "/media/events/cosmetica-mobile.webp",
-    logo: "/media/logos/panacosmetica.svg",
+    image: "/media/phase8/events/cosmetica.webp",
+    mobileImage: "/media/phase8/events/cosmetica-mobile.webp",
+    heroImage: "/media/phase8/hero/cosmetica-strip.webp",
+    logo: "/media/phase8/logos/panacosmetica-light.svg",
     accent: "#d7a4b2",
     accentSoft: "rgba(215,164,178,.24)",
   },
@@ -144,9 +147,10 @@ const sharedEvents = {
     id: "defensa" as const,
     number: "03",
     url: "https://panasecurityexpo.com/",
-    image: "/media/events/defensa.webp",
-    mobileImage: "/media/events/defensa-mobile.webp",
-    logo: "/media/logos/panadefensa.png",
+    image: "/media/phase8/events/defensa.webp",
+    mobileImage: "/media/phase8/events/defensa-mobile.webp",
+    heroImage: "/media/phase8/hero/defensa-strip.webp",
+    logo: "/media/phase8/logos/panadefensa.png",
     accent: "#3484ff",
     accentSoft: "rgba(52,132,255,.24)",
   },
@@ -154,9 +158,10 @@ const sharedEvents = {
     id: "energy" as const,
     number: "04",
     url: "https://panaenergyexpo.com/",
-    image: "/media/events/energy.webp",
-    mobileImage: "/media/events/energy-mobile.webp",
-    logo: "/media/logos/panaenergy.svg",
+    image: "/media/phase8/events/energy.webp",
+    mobileImage: "/media/phase8/events/energy-mobile.webp",
+    heroImage: "/media/phase8/hero/energy-strip.webp",
+    logo: "/media/phase8/logos/panaenergy.png",
     accent: "#3fc5cd",
     accentSoft: "rgba(63,197,205,.24)",
   },

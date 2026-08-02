@@ -2,7 +2,10 @@ import type { NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
 
 export async function proxy(request: NextRequest) {
-  return updateSession(request);
+  const requestHeaders = new Headers(request.headers);
+  const locale = request.nextUrl.pathname.split("/")[1];
+  requestHeaders.set("x-panaexim-locale", locale === "en" ? "en" : "es");
+  return updateSession(request, requestHeaders);
 }
 
 export const config = {

@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { AboutSection } from "@/components/AboutSection";
+import { CinematicEventShowcase } from "@/components/CinematicEventShowcase";
 import { ContactSection } from "@/components/ContactSection";
-import { EventCarousel } from "@/components/EventCarousel";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { LeadershipSection } from "@/components/LeadershipSection";
 import { OpportunitiesSection } from "@/components/OpportunitiesSection";
 import { ParticipantsTeaser } from "@/components/ParticipantsTeaser";
 import { Preloader } from "@/components/Preloader";
 import { VenueSection } from "@/components/VenueSection";
+import { VisionSection } from "@/components/VisionSection";
 import { content, isLocale, locales } from "@/lib/content";
 
-type HomePageProps = {
-  params: Promise<{ locale: string }>;
-};
+type HomePageProps = { params: Promise<{ locale: string }> };
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -28,13 +25,7 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
     description: spanish
       ? "Cuatro exposiciones internacionales convergen en Panamá del 23 al 26 de noviembre de 2026."
       : "Four international exhibitions converge in Panama from November 23–26, 2026.",
-    alternates: {
-      canonical: `/${spanish ? "es" : "en"}`,
-      languages: {
-        es: "/es",
-        en: "/en",
-      },
-    },
+    alternates: { canonical: `/${spanish ? "es" : "en"}`, languages: { es: "/es", en: "/en" } },
   };
 }
 
@@ -52,19 +43,8 @@ export default async function HomePage({ params }: HomePageProps) {
     endDate: "2026-11-26T18:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: {
-      "@type": "Place",
-      name: "Panama Convention Center",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Panama City",
-        addressCountry: "PA",
-      },
-    },
-    organizer: {
-      "@type": "Organization",
-      name: "PanaEXIM",
-    },
+    location: { "@type": "Place", name: "Panama Convention Center", address: { "@type": "PostalAddress", addressLocality: "Panama City", addressCountry: "PA" } },
+    organizer: { "@type": "Organization", name: "PanaEXIM" },
   };
 
   return (
@@ -72,20 +52,16 @@ export default async function HomePage({ params }: HomePageProps) {
       <Preloader />
       <Header locale={rawLocale} navigation={copy.navigation} />
       <main>
-        <Hero hero={copy.hero} />
-        <AboutSection about={copy.about} />
-        <EventCarousel locale={rawLocale} heading={copy.eventsHeading} events={copy.events} />
+        <Hero hero={copy.hero} events={copy.events} />
+        <CinematicEventShowcase locale={rawLocale} heading={copy.eventsHeading} events={copy.events} />
+        <VisionSection about={copy.about} leadership={copy.leadership} events={copy.events} />
         <OpportunitiesSection locale={rawLocale} opportunities={copy.opportunities} />
-        <LeadershipSection leadership={copy.leadership} />
         <ParticipantsTeaser locale={rawLocale} participants={copy.participants} />
         <VenueSection venue={copy.venue} />
         <ContactSection locale={rawLocale} contact={copy.contact} />
       </main>
       <Footer locale={rawLocale} footer={copy.footer} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     </>
   );
 }

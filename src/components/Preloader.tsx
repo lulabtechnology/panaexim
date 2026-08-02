@@ -14,72 +14,97 @@ export function Preloader() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let hasSeen = false;
     try {
-      hasSeen = window.sessionStorage.getItem("panaexim-preloader") === "seen";
+      hasSeen = window.sessionStorage.getItem("panaexim-preloader-v8") === "seen";
     } catch {
       // Storage can be unavailable in strict privacy modes.
     }
-    const duration = reduceMotion ? 0.12 : hasSeen ? 0.45 : 1.65;
+
+    document.documentElement.classList.add("is-loading");
+
     const context = gsap.context(() => {
+      const duration = reduceMotion ? 0.12 : hasSeen ? 0.42 : 1.35;
       const timeline = gsap.timeline({
+        defaults: { ease: "power3.out" },
         onComplete: () => {
           try {
-            window.sessionStorage.setItem("panaexim-preloader", "seen");
+            window.sessionStorage.setItem("panaexim-preloader-v8", "seen");
           } catch {
-            // The preloader can still complete when session storage is blocked.
+            // The sequence can finish without storage.
           }
+          document.documentElement.classList.remove("is-loading");
           setRemoved(true);
         },
       });
 
       timeline
         .fromTo(
-          ".preloader-line",
-          { scaleX: 0 },
-          { scaleX: 1, duration: duration * 0.35, stagger: 0.04, ease: "power3.out" },
+          ".px-loader-point",
+          { scale: 0, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, duration: duration * 0.24, stagger: 0.045 },
         )
         .fromTo(
-          ".preloader-emblem",
-          { autoAlpha: 0, scale: 0.72, rotate: -14 },
-          { autoAlpha: 1, scale: 1, rotate: 0, duration: duration * 0.35, ease: "back.out(1.8)" },
-          0.05,
+          ".px-loader-cross span",
+          { scaleX: 0, scaleY: 0 },
+          { scaleX: 1, scaleY: 1, duration: duration * 0.28, stagger: 0.035 },
+          0.08,
         )
         .fromTo(
-          ".preloader-copy > *",
-          { yPercent: 90, autoAlpha: 0 },
-          { yPercent: 0, autoAlpha: 1, duration: duration * 0.25, stagger: 0.06 },
-          duration * 0.25,
+          ".px-loader-mark",
+          { scale: 0.78, rotate: -18, autoAlpha: 0 },
+          { scale: 1, rotate: 0, autoAlpha: 1, duration: duration * 0.35, ease: "back.out(1.55)" },
+          0.08,
+        )
+        .fromTo(
+          ".px-loader-word",
+          { yPercent: 110, autoAlpha: 0 },
+          { yPercent: 0, autoAlpha: 1, duration: duration * 0.24 },
+          duration * 0.38,
+        )
+        .to(
+          ".px-loader-slit",
+          { scaleY: 1, duration: duration * 0.18, ease: "power2.inOut" },
+          duration * 0.58,
         )
         .to(root.current, {
-          yPercent: -100,
-          duration: duration * 0.45,
+          clipPath: "inset(0 0 100% 0)",
+          duration: duration * 0.42,
           ease: "power4.inOut",
-          delay: reduceMotion || hasSeen ? 0 : 0.15,
         });
     }, root);
 
-    return () => context.revert();
+    return () => {
+      context.revert();
+      document.documentElement.classList.remove("is-loading");
+    };
   }, []);
 
   if (removed) return null;
 
   return (
-    <div className="preloader" ref={root} aria-hidden="true">
-      <span className="preloader-line line-one" />
-      <span className="preloader-line line-two" />
-      <div className="preloader-center">
+    <div className="px-loader" ref={root} aria-hidden="true">
+      <div className="px-loader-cross">
+        <span />
+        <span />
+      </div>
+      <span className="px-loader-point point-n" />
+      <span className="px-loader-point point-e" />
+      <span className="px-loader-point point-s" />
+      <span className="px-loader-point point-w" />
+      <div className="px-loader-center">
         <Image
-          className="preloader-emblem"
+          className="px-loader-mark"
           src="/media/logos/panaexim-emblem.png"
           alt=""
-          width={220}
-          height={176}
+          width={240}
+          height={192}
           priority
         />
-        <div className="preloader-copy">
-          <strong>PanaEXIM 2026</strong>
-          <span>4 Events. Infinite Opportunities.</span>
+        <div className="px-loader-word">
+          <strong>PanaEXIM</strong>
+          <span>2026</span>
         </div>
       </div>
+      <span className="px-loader-slit" />
     </div>
   );
 }
