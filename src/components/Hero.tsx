@@ -143,7 +143,6 @@ export function Hero({ locale, hero, events }: HeroProps) {
           <div className="px-hero-overline px-hero-reveal">4 Events. Infinite Opportunities.</div>
           <h1 id="hero-title">
             <span className="px-hero-reveal">PanaEXIM</span>
-            <span className="px-hero-reveal">2026</span>
           </h1>
           <p className="px-hero-description px-hero-reveal">{hero.description}</p>
           <div className="px-hero-date px-hero-reveal">

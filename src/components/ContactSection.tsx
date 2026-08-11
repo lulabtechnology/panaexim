@@ -11,14 +11,20 @@ type ContactSectionProps = {
   contact: SiteContent["contact"];
 };
 
+const directContacts = [
+  { name: "Carolina López", roleEs: "Coordinación", roleEn: "Coordination", phone: "+507 6992-0333", whatsapp: "50769920333" },
+  { name: "Alm Palmer", roleEs: "CEO", roleEn: "CEO", phone: "+507 6270-6323", whatsapp: "50762706323" },
+] as const;
+
 export function ContactSection({ locale, contact }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
+  const spanish = locale === "es";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const lines = [
-      "PanaEXIM 2026",
+      "PanaEXIM",
       "",
       `${contact.name}: ${String(form.get("name") ?? "")}`,
       `${contact.company}: ${String(form.get("company") ?? "")}`,
@@ -55,10 +61,9 @@ export function ContactSection({ locale, contact }: ContactSectionProps) {
             </article>
 
             <article>
-              <span><MessageCircle aria-hidden="true" /></span>
+              <span><Mail aria-hidden="true" /></span>
               <div>
                 <h3>{contact.turkey}</h3>
-                <a href="tel:+905423829622">+90 542 382 96 22</a>
                 <a href="mailto:to@panamajewelleryshow.com">to@panamajewelleryshow.com</a>
               </div>
             </article>
@@ -78,7 +83,7 @@ export function ContactSection({ locale, contact }: ContactSectionProps) {
               <div>
                 <h3>{contact.address}</h3>
                 <p>
-                  {locale === "es"
+                  {spanish
                     ? "Panama Pacifico International Business Center, Edificio 3485, Oficina 102, Free Zone, Ciudad de Panamá, Panamá."
                     : "Panama Pacifico International Business Center, Building 3485, Office 102, Free Zone, Panama City, Panama."}
                 </p>
@@ -88,6 +93,35 @@ export function ContactSection({ locale, contact }: ContactSectionProps) {
         </div>
 
         <form className="contact-form" onSubmit={handleSubmit}>
+          <div className="contact-direct">
+            <div className="contact-direct-copy">
+              <span>{spanish ? "WhatsApp directo" : "Direct WhatsApp"}</span>
+              <h3>{spanish ? "¿Prefiere escribirnos sin llenar el formulario?" : "Prefer to message us without filling out the form?"}</h3>
+              <p>{spanish ? "Elija un contacto y abra WhatsApp de inmediato." : "Choose a contact and open WhatsApp immediately."}</p>
+            </div>
+            <div className="contact-direct-actions">
+              {directContacts.map((person) => (
+                <a
+                  key={person.name}
+                  href={`https://wa.me/${person.whatsapp}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-direct-link"
+                >
+                  <MessageCircle aria-hidden="true" />
+                  <span>
+                    <strong>{person.name}</strong>
+                    <small>{spanish ? person.roleEs : person.roleEn} · {person.phone}</small>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="contact-form-separator" aria-hidden="true">
+            <span>{spanish ? "o complete el formulario" : "or complete the form"}</span>
+          </div>
+
           <div className="form-heading">
             <span>01</span>
             <h3>{contact.formTitle}</h3>

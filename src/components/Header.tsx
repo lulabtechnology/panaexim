@@ -86,7 +86,7 @@ export function Header({ locale, navigation }: HeaderProps) {
   return (
     <header className={`px-header ${scrolled || open ? "is-solid" : ""}`}>
       <div className="px-header-inner">
-        <Link href={`/${locale}`} className="px-brand" aria-label="PanaEXIM 2026">
+        <Link href={`/${locale}`} className="px-brand" aria-label="PanaEXIM">
           <Image
             src="/media/phase8/logos/panaexim-gold.png"
             alt="PanaEXIM"
@@ -94,7 +94,6 @@ export function Header({ locale, navigation }: HeaderProps) {
             height={506}
             priority
           />
-          <span>2026</span>
         </Link>
 
         <nav className="px-desktop-nav" aria-label={locale === "es" ? "Navegación principal" : "Main navigation"}>
@@ -135,7 +134,7 @@ export function Header({ locale, navigation }: HeaderProps) {
       >
         <div className="px-mobile-menu-head">
           <span>{locale === "es" ? "Navegación" : "Navigation"}</span>
-          <small>PanaEXIM 2026</small>
+          <small>PanaEXIM</small>
         </div>
         <nav>
           {links.map(([label, href], index) => (

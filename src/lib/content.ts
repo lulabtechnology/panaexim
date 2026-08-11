@@ -18,6 +18,8 @@ export type EventItem = {
   mobileImage: string;
   heroImage: string;
   logo: string;
+  instagram: string;
+  facebook: string;
   accent: string;
   accentSoft: string;
 };
@@ -132,6 +134,8 @@ const sharedEvents = {
     mobileImage: "/media/phase8/events/jewellery-mobile.webp",
     heroImage: "/media/phase8/hero/jewellery-strip.webp",
     logo: "/media/phase8/logos/pjs-gold.png",
+    instagram: "https://www.instagram.com/panamajewelleryshow/",
+    facebook: "https://www.facebook.com/panamajewelleryshow/",
     accent: "#dfbd67",
     accentSoft: "rgba(223,189,103,.24)",
   },
@@ -143,6 +147,8 @@ const sharedEvents = {
     mobileImage: "/media/phase8/events/cosmetica-mobile.webp",
     heroImage: "/media/phase8/hero/cosmetica-strip.webp",
     logo: "/media/phase8/logos/panacosmetica-light.svg",
+    instagram: "https://www.instagram.com/panacosmetica/",
+    facebook: "https://www.facebook.com/panacosmetica/",
     accent: "#d7a4b2",
     accentSoft: "rgba(215,164,178,.24)",
   },
@@ -154,6 +160,8 @@ const sharedEvents = {
     mobileImage: "/media/phase8/events/defensa-mobile.webp",
     heroImage: "/media/phase8/hero/defensa-strip.webp",
     logo: "/media/phase8/logos/panadefensa.png",
+    instagram: "https://www.instagram.com/panadefensainternational/",
+    facebook: "https://www.facebook.com/panadefensainternational/",
     accent: "#3484ff",
     accentSoft: "rgba(52,132,255,.24)",
   },
@@ -165,6 +173,8 @@ const sharedEvents = {
     mobileImage: "/media/phase8/events/energy-mobile.webp",
     heroImage: "/media/phase8/hero/energy-strip.webp",
     logo: "/media/phase8/logos/panaenergy.png",
+    instagram: "https://www.instagram.com/panaenergyexpo/",
+    facebook: "https://www.facebook.com/panaenergyexpo/",
     accent: "#3fc5cd",
     accentSoft: "rgba(63,197,205,.24)",
   },
@@ -184,7 +194,7 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       eyebrow: "Panamá · 23–26 noviembre 2026",
-      title: "PanaEXIM 2026",
+      title: "PanaEXIM",
       tagline: "4 Events. Infinite Opportunities.",
       description:
         "Cuatro exposiciones internacionales convergen en Panamá para conectar industrias, empresas, compradores, instituciones y líderes globales.",
@@ -356,7 +366,7 @@ export const content: Record<Locale, SiteContent> = {
     },
     hero: {
       eyebrow: "Panama · November 23–26, 2026",
-      title: "PanaEXIM 2026",
+      title: "PanaEXIM",
       tagline: "4 Events. Infinite Opportunities.",
       description:
         "Four international exhibitions converge in Panama to connect industries, companies, buyers, institutions and global leaders.",

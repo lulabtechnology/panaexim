@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Facebook, Instagram } from "lucide-react";
 import type { EventItem, Locale, SiteContent } from "@/lib/content";
 
 type VisionSectionProps = {
@@ -9,6 +10,8 @@ type VisionSectionProps = {
 };
 
 export function VisionSection({ locale, about, leadership, events }: VisionSectionProps) {
+  const socialLabel = locale === "es" ? "Redes oficiales" : "Official social media";
+
   return (
     <section className="px-vision" id="panaexim">
       <div className="px-vision-grid">
@@ -33,10 +36,22 @@ export function VisionSection({ locale, about, leadership, events }: VisionSecti
 
       <div className="px-vision-logos" aria-label={locale === "es" ? "Eventos de PanaEXIM" : "PanaEXIM events"}>
         {events.map((event) => (
-          <a key={event.id} href={event.url} target="_blank" rel="noreferrer">
-            <span>{event.number}</span>
-            <Image src={event.logo} alt={event.name} width={360} height={150} />
-          </a>
+          <article className="px-vision-event" key={event.id}>
+            <span className="px-vision-event-number">{event.number}</span>
+            <a className="px-vision-event-link" href={event.url} target="_blank" rel="noreferrer">
+              <Image src={event.logo} alt={event.name} width={360} height={150} />
+            </a>
+            <nav className="px-event-socials" aria-label={`${socialLabel}: ${event.name}`}>
+              <a href={event.instagram} target="_blank" rel="noreferrer" aria-label={`Instagram · ${event.name}`}>
+                <Instagram aria-hidden="true" />
+                <span>Instagram</span>
+              </a>
+              <a href={event.facebook} target="_blank" rel="noreferrer" aria-label={`Facebook · ${event.name}`}>
+                <Facebook aria-hidden="true" />
+                <span>Facebook</span>
+              </a>
+            </nav>
+          </article>
         ))}
       </div>
     </section>

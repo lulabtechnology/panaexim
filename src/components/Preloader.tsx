@@ -108,7 +108,6 @@ export function Preloader() {
         />
         <div className="px-loader-word">
           <strong>PanaEXIM</strong>
-          <span>2026</span>
         </div>
       </div>
       <span className="px-loader-slit" />
