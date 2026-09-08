@@ -3,6 +3,7 @@ import { requireAdminIdentity } from "@/lib/admin-auth";
 import {
   isBoothAvailability,
   isValidBoothCode,
+  normalizeBoothCode,
   type BoothAvailability,
 } from "@/lib/booths";
 import { createServiceClient } from "@/lib/supabase/admin";
@@ -36,7 +37,7 @@ export async function PATCH(
   }
 
   const { code: rawCode } = await context.params;
-  const code = rawCode.trim().toUpperCase();
+  const code = normalizeBoothCode(rawCode);
   if (!isValidBoothCode(code)) {
     return json({ error: "Invalid booth code." }, 400);
   }

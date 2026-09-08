@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { BoothAvailability, BoothStatusView } from "@/lib/booths";
+import { normalizeBoothCode, type BoothAvailability, type BoothStatusView } from "@/lib/booths";
 import type { Locale } from "@/lib/content";
 import type { AdminIdentity } from "@/lib/admin-auth";
 import type { ParticipantView } from "@/lib/participants";
@@ -90,11 +90,13 @@ export function AdminDashboard({
   }), [localBooths]);
 
   const visibleBooths = useMemo(() => {
-    const normalized = boothQuery.trim().toUpperCase().replace(/\s+/g, "");
-    return localBooths.filter((booth) => {
-      if (boothFilter !== "all" && booth.status !== boothFilter) return false;
-      return !normalized || booth.code.includes(normalized);
-    });
+    const normalized = normalizeBoothCode(boothQuery.replace(/\s+/g, ""));
+    return localBooths
+      .filter((booth) => {
+        if (boothFilter !== "all" && booth.status !== boothFilter) return false;
+        return !normalized || booth.code.includes(normalized);
+      })
+      .sort((a, b) => Number(a.code) - Number(b.code));
   }, [boothFilter, boothQuery, localBooths]);
 
   function resetNotices() {
@@ -186,8 +188,8 @@ export function AdminDashboard({
       );
       setMessage(
         spanish
-          ? `${code} ahora está ${status === "available" ? "disponible" : "ocupado"}.`
-          : `${code} is now ${status === "available" ? "available" : "occupied"}.`,
+          ? `Stand ${code} ahora está ${status === "available" ? "disponible" : "ocupado"}.`
+          : `Booth ${code} is now ${status === "available" ? "available" : "occupied"}.`,
       );
     } catch {
       setError(spanish ? "Error de conexión." : "Connection error.");
@@ -438,8 +440,8 @@ export function AdminDashboard({
         {!boothsDatabaseReady ? (
           <p className="admin-booths-warning">
             {spanish
-              ? "El mapa está usando la disponibilidad inicial. Para habilitar cambios desde este panel, ejecuta supabase/migrations/202609080001_booths.sql en Supabase."
-              : "The map is using its initial availability. To enable edits from this panel, run supabase/migrations/202609080001_booths.sql in Supabase."}
+              ? "El mapa está usando la disponibilidad inicial. Para habilitar cambios desde este panel, ejecuta la migración nueva supabase/migrations/202609080002_booths_numbering_125.sql en Supabase."
+              : "The map is using its initial availability. To enable edits from this panel, run the new supabase/migrations/202609080002_booths_numbering_125.sql migration in Supabase."}
           </p>
         ) : null}
 
@@ -450,7 +452,7 @@ export function AdminDashboard({
               type="search"
               value={boothQuery}
               onChange={(event) => setBoothQuery(event.target.value)}
-              placeholder={spanish ? "Buscar stand, ej. E12" : "Search booth, e.g. E12"}
+              placeholder={spanish ? "Buscar stand, ej. 85" : "Search booth, e.g. 85"}
             />
           </label>
           <div className="admin-booth-filter" role="group" aria-label={spanish ? "Filtrar stands" : "Filter booths"}>
@@ -483,8 +485,8 @@ export function AdminDashboard({
                 disabled={boothSavingCode === booth.code || !boothsDatabaseReady}
                 aria-label={
                   spanish
-                    ? `${booth.code}: ${booth.status === "available" ? "Disponible" : "Ocupado"}. Cambiar a ${nextStatus === "available" ? "Disponible" : "Ocupado"}.`
-                    : `${booth.code}: ${booth.status}. Change to ${nextStatus}.`
+                    ? `Stand ${booth.code}: ${booth.status === "available" ? "Disponible" : "Ocupado"}. Cambiar a ${nextStatus === "available" ? "Disponible" : "Ocupado"}.`
+                    : `Booth ${booth.code}: ${booth.status}. Change to ${nextStatus}.`
                 }
               >
                 <strong>{booth.code}</strong>

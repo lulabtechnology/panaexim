@@ -1,47 +1,73 @@
-# PanaEXIM 2026 — Selector de stands Canal 1
+# PanaEXIM 2026 — Selector de stands Canal 1 · versión 2
 
-## Qué agrega este incremental
+## Qué corrige este incremental
 
-- Nueva sección pública `Elige tu stand / Choose your booth` en `/es` y `/en`.
-- Plano interactivo de Canal 1 con 124 stands numerados.
-- Verde = disponible; rojo = ocupado.
-- Filtros por disponibilidad, búsqueda por código y zoom/desplazamiento.
-- Vista responsive para escritorio, tablet y móvil.
-- En móvil se incluye una vista rápida de todos los stands disponibles.
-- Al seleccionar un stand disponible se ofrecen dos contactos de WhatsApp:
+- Sustituye la nomenclatura temporal tipo `A01`, `E12`, etc. por los números reales del plano: **1 a 125**.
+- Incorpora el bloque inferior que faltaba: **stands 119, 120, 121, 122, 123, 124 y 125**.
+- Mantiene el plano público sin nombres de expositores.
+- Verde = disponible.
+- Rojo = ocupado.
+- Estado inicial según el plano numerado recibido: **82 disponibles / 43 ocupados / 125 total**.
+- Mantiene los dos contactos de WhatsApp:
   - +507 6270-6323
   - +507 6992-0333
-- El mensaje de WhatsApp incluye automáticamente el código del stand seleccionado.
-- El mapa público nunca muestra nombres de expositores.
-- El panel `/es/admin` y `/en/admin` incorpora gestión de disponibilidad: un clic cambia cada stand entre Disponible y Ocupado.
+- El mensaje de WhatsApp incluye automáticamente el número del stand seleccionado.
+- El administrador sigue pudiendo cambiar cualquier stand entre Disponible y Ocupado desde `/es/admin` y `/en/admin`.
 
-## Paso obligatorio en Supabase
+## Mejora móvil tipo selector de cine
 
-Antes de usar la edición de stands desde el admin, ejecutar en el SQL Editor de Supabase:
+La experiencia móvil fue reconstruida para que no sea una simple reducción del plano de escritorio:
 
-`supabase/migrations/202609080001_booths.sql`
+- visor grande y desplazable del plano;
+- stands táctiles con números legibles;
+- controles compactos de zoom;
+- navegación rápida por zonas: 1–43, 44–74, 75–118 y 119–125;
+- buscador numérico;
+- leyenda flotante Disponible/Ocupado;
+- vista separada de stands disponibles;
+- al tocar un stand aparece una tarjeta inferior flotante tipo selector de asientos;
+- si está disponible, los dos botones de WhatsApp quedan accesibles desde esa tarjeta;
+- diseño adaptado para pantallas pequeñas y safe-area inferior de iPhone.
 
-La migración:
+## SQL obligatorio
 
-1. Crea la tabla `public.booths`.
-2. Mantiene RLS y acceso administrativo.
-3. Crea los 124 códigos de stands.
-4. Carga la disponibilidad inicial basada en el plano de Canal 1 recibido.
-5. No guarda nombres de expositores.
+### Si ya ejecutaste la migración anterior
 
-La web puede renderizar el mapa aunque todavía no se haya ejecutado la migración, usando la disponibilidad inicial incluida en código. Sin la migración, el admin mostrará una advertencia y no permitirá cambiar estados.
+Ejecuta solamente esta nueva migración en el SQL Editor de Supabase:
 
-## Comportamiento de actualización
+`supabase/migrations/202609080002_booths_numbering_125.sql`
 
-Cuando el administrador cambia un stand:
+Esta migración:
 
-1. Se guarda en Supabase.
-2. El mapa público consulta la disponibilidad mediante `/api/booths`.
-3. Los visitantes reciben el estado actualizado sin que sea necesario volver a compilar la web.
-4. Mientras una persona mantiene la página abierta, el mapa vuelve a consultar la disponibilidad aproximadamente cada 60 segundos.
+1. cambia el esquema temporal al numerado oficial 1–125;
+2. intenta conservar los cambios de disponibilidad hechos anteriormente, mapeándolos por la posición física del stand;
+3. agrega el stand 125 y corrige la franja inferior;
+4. elimina los identificadores temporales A01/L05;
+5. vuelve a aplicar una validación para aceptar únicamente stands numéricos del 1 al 125.
 
-## Códigos
+### Si nunca ejecutaste ninguna migración de stands
 
-La nomenclatura queda dividida por zonas del plano: A, B, C, D, E, F, G, H, J, K y L. Se omite la letra I para evitar confusión visual con el número 1.
+Ejecuta, en este orden:
 
-Total: **124 stands**.
+1. `supabase/migrations/202609080001_booths.sql`
+2. `supabase/migrations/202609080002_booths_numbering_125.sql`
+
+La web puede mostrar el plano usando el estado inicial incluido en código aunque la segunda migración todavía no se haya ejecutado. Sin embargo, hasta ejecutar la migración nueva, el panel administrativo mostrará una advertencia y no habilitará los cambios de disponibilidad del nuevo esquema 1–125.
+
+## Estado inicial según el plano recibido
+
+Ocupados al cargar esta versión:
+
+- 1–17
+- 27–34
+- 55–60
+- 62–63
+- 85
+- 87–90
+- 119–123
+
+Todo el resto se carga como disponible.
+
+## Privacidad
+
+Los nombres visibles en el archivo de referencia se usaron únicamente para determinar qué espacios estaban ocupados. **No se guardan ni se publican en el módulo de stands.**

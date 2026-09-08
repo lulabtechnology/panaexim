@@ -4,6 +4,7 @@ import {
   getDefaultBoothStatuses,
   isBoothAvailability,
   isValidBoothCode,
+  normalizeBoothCode,
   type BoothStatusView,
 } from "@/lib/booths";
 import { createServiceClient } from "@/lib/supabase/admin";
@@ -24,7 +25,7 @@ function mergeStoredBooths(records: StoredBooth[]): BoothStatusView[] {
   const stored = new Map(
     records
       .filter((record) => isValidBoothCode(record.code) && isBoothAvailability(record.status))
-      .map((record) => [record.code.toUpperCase(), record]),
+      .map((record) => [normalizeBoothCode(record.code), record]),
   );
 
   return getDefaultBoothStatuses().map((fallback) => {
@@ -54,8 +55,13 @@ export async function getBoothStore(): Promise<BoothStoreResult> {
     return { booths: getDefaultBoothStatuses(), databaseReady: false };
   }
 
+  const records = (data ?? []) as StoredBooth[];
+  const validBoothCount = new Set(
+    records.filter((record) => isValidBoothCode(record.code)).map((record) => normalizeBoothCode(record.code)),
+  ).size;
+
   return {
-    booths: mergeStoredBooths((data ?? []) as StoredBooth[]),
-    databaseReady: true,
+    booths: mergeStoredBooths(records),
+    databaseReady: validBoothCount === 125,
   };
 }

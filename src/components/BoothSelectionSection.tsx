@@ -3,6 +3,7 @@
 import {
   ArrowUpRight,
   CheckCircle2,
+  ChevronDown,
   CircleDot,
   LocateFixed,
   MapPinned,
@@ -11,6 +12,7 @@ import {
   Plus,
   Search,
   Sparkles,
+  X,
 } from "lucide-react";
 import {
   type CSSProperties,
@@ -19,7 +21,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { boothLayout, getDefaultBoothStatuses, type BoothAvailability } from "@/lib/booths";
+import {
+  boothLayout,
+  getDefaultBoothStatuses,
+  normalizeBoothCode,
+  type BoothAvailability,
+} from "@/lib/booths";
 import type { Locale } from "@/lib/content";
 
 type BoothSelectionSectionProps = {
@@ -42,66 +49,80 @@ const copy = {
   es: {
     eyebrow: "PanaEXIM 2026 · Panama Convention Center",
     title: "Elige tu stand en Canal 1.",
-    body: "Explora el plano, identifica espacios disponibles y consulta directamente con nuestro equipo. La disponibilidad se actualiza desde el panel de PanaEXIM.",
+    body: "Recorre el plano real de Canal 1, identifica espacios disponibles y consulta directamente con nuestro equipo. La disponibilidad se actualiza desde el panel de PanaEXIM.",
     live: "Disponibilidad de stands",
     total: "stands",
     available: "Disponibles",
     occupied: "Ocupados",
     all: "Todos",
-    map: "Mapa",
+    map: "Plano",
     list: "Disponibles",
     choose: "Selecciona un stand",
-    chooseBody: "Toca cualquier espacio del plano para ver su estado y, si está libre, solicitar información por WhatsApp.",
+    chooseBody: "Toca cualquier stand para conocer su estado. Si está disponible, puedes consultarlo de inmediato por WhatsApp.",
     booth: "Stand",
     availableLabel: "Disponible",
     occupiedLabel: "Ocupado",
-    availableBody: "Este espacio aparece disponible. Escríbenos para confirmar condiciones, precio y reserva.",
-    occupiedBody: "Este espacio ya figura como ocupado. Puedes explorar los stands verdes para encontrar otra ubicación.",
+    availableBody: "Este stand aparece disponible. Escríbenos para confirmar precio, condiciones y reserva.",
+    occupiedBody: "Este stand ya figura como ocupado. Explora los espacios verdes para encontrar otra ubicación.",
     contact: "Consultar este stand",
     contactPrefix: "Escribir a",
-    search: "Buscar stand, ej. E12",
-    empty: "No encontramos un stand con ese código.",
+    search: "Buscar stand, ej. 85",
+    empty: "No encontramos un stand con ese número.",
     tables: "MESAS",
     entrance: "ENTRADA",
     hall: "CANAL 1",
     hallSub: "PANAMA CONVENTION CENTER",
     zoomIn: "Acercar plano",
     zoomOut: "Alejar plano",
-    center: "Volver al inicio del plano",
-    hint: "Desliza el plano para recorrer Canal 1",
+    center: "Centrar plano",
+    hint: "Arrastra el plano para recorrer Canal 1 · toca un stand para seleccionarlo",
     privacy: "El mapa público muestra únicamente disponibilidad. No publica nombres de expositores.",
+    zoneWest: "Oeste · 1–43",
+    zoneCenter: "Centro · 44–74",
+    zoneEast: "Este · 75–118",
+    zoneSouth: "Frente · 119–125",
+    selected: "Stand seleccionado",
+    close: "Cerrar",
+    cinemaHint: "Toca y desplaza el plano como un selector de asientos",
   },
   en: {
     eyebrow: "PanaEXIM 2026 · Panama Convention Center",
     title: "Choose your booth in Canal 1.",
-    body: "Explore the floor plan, identify available spaces and contact our team directly. Availability is updated from the PanaEXIM control panel.",
+    body: "Explore the real Canal 1 floor plan, identify available spaces and contact our team directly. Availability is updated from the PanaEXIM control panel.",
     live: "Booth availability",
     total: "booths",
     available: "Available",
     occupied: "Occupied",
     all: "All",
-    map: "Map",
+    map: "Floor plan",
     list: "Available",
     choose: "Select a booth",
-    chooseBody: "Tap any space on the floor plan to check its status and, when available, request information through WhatsApp.",
+    chooseBody: "Tap any booth to check its status. If it is available, you can ask about it instantly on WhatsApp.",
     booth: "Booth",
     availableLabel: "Available",
     occupiedLabel: "Occupied",
-    availableBody: "This space is currently shown as available. Message us to confirm terms, pricing and reservation.",
-    occupiedBody: "This space is currently marked as occupied. Explore the green booths to find another location.",
+    availableBody: "This booth is currently available. Message us to confirm pricing, terms and reservation.",
+    occupiedBody: "This booth is currently occupied. Explore the green spaces to find another location.",
     contact: "Ask about this booth",
     contactPrefix: "Message",
-    search: "Search booth, e.g. E12",
-    empty: "We could not find a booth with that code.",
+    search: "Search booth, e.g. 85",
+    empty: "We could not find a booth with that number.",
     tables: "TABLES",
     entrance: "ENTRANCE",
     hall: "CANAL 1",
     hallSub: "PANAMA CONVENTION CENTER",
     zoomIn: "Zoom in",
     zoomOut: "Zoom out",
-    center: "Return to the start of the floor plan",
-    hint: "Swipe the floor plan to explore Canal 1",
+    center: "Center floor plan",
+    hint: "Drag the floor plan to explore Canal 1 · tap a booth to select it",
     privacy: "The public map only displays availability. Exhibitor names are never published here.",
+    zoneWest: "West · 1–43",
+    zoneCenter: "Center · 44–74",
+    zoneEast: "East · 75–118",
+    zoneSouth: "Front · 119–125",
+    selected: "Selected booth",
+    close: "Close",
+    cinemaHint: "Tap and pan the plan like a cinema seat selector",
   },
 } as const;
 
@@ -121,6 +142,7 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
   const [mobileView, setMobileView] = useState<MobileView>("map");
   const [zoom, setZoom] = useState(1);
   const [search, setSearch] = useState("");
+  const [searchMiss, setSearchMiss] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -139,13 +161,13 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
               typeof booth.code === "string" &&
               (booth.status === "available" || booth.status === "occupied")
             ) {
-              next[booth.code.toUpperCase()] = booth.status;
+              next[normalizeBoothCode(booth.code)] = booth.status;
             }
           }
           return next;
         });
       } catch {
-        // The static fallback remains fully functional when the live store is unavailable.
+        // Static fallback remains usable if the live database is temporarily unavailable.
       }
     }
 
@@ -176,27 +198,37 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
 
   function centerBooth(code: string) {
     const viewport = viewportRef.current;
-    const booth = viewport?.querySelector<HTMLElement>(`[data-booth-code="${code}"]`);
-    if (!viewport || !booth) return;
+    const target = viewport?.querySelector<HTMLElement>(`[data-booth-code="${code}"]`);
+    if (!viewport || !target) return;
 
     viewport.scrollTo({
-      left: Math.max(0, booth.offsetLeft - viewport.clientWidth / 2 + booth.offsetWidth / 2),
-      top: Math.max(0, booth.offsetTop - viewport.clientHeight / 2 + booth.offsetHeight / 2),
+      left: Math.max(0, target.offsetLeft - viewport.clientWidth / 2 + target.offsetWidth / 2),
+      top: Math.max(0, target.offsetTop - viewport.clientHeight / 2 + target.offsetHeight / 2),
       behavior: "smooth",
     });
   }
 
+  function centerZone(code: string) {
+    setMobileView("map");
+    window.requestAnimationFrame(() => centerBooth(code));
+  }
+
   function chooseBooth(code: string) {
     setSelectedCode(code);
+    setSearchMiss(false);
     setMobileView("map");
     window.requestAnimationFrame(() => centerBooth(code));
   }
 
   function submitSearch() {
-    const normalized = search.trim().toUpperCase().replace(/\s+/g, "");
-    const booth = boothLayout.find((item) => item.code === normalized);
-    if (!booth) return;
-    chooseBooth(booth.code);
+    const normalized = normalizeBoothCode(search.replace(/\s+/g, ""));
+    const item = boothLayout.find((booth) => booth.code === normalized);
+    if (!item) {
+      setSearchMiss(true);
+      return;
+    }
+    setSearchMiss(false);
+    chooseBooth(item.code);
   }
 
   function whatsappUrl(number: string, code: string) {
@@ -207,10 +239,17 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
   }
 
   const mapStyle: CSSProperties = {
-    width: `${Math.round(900 * zoom)}px`,
-    minWidth: `${Math.round(900 * zoom)}px`,
+    width: `${Math.round(840 * zoom)}px`,
+    minWidth: `${Math.round(840 * zoom)}px`,
     height: `${Math.round(1000 * zoom)}px`,
   };
+
+  const zoneButtons = [
+    { label: t.zoneWest, code: "24" },
+    { label: t.zoneCenter, code: "50" },
+    { label: t.zoneEast, code: "81" },
+    { label: t.zoneSouth, code: "122" },
+  ];
 
   return (
     <section id="stands" className="booth-section section">
@@ -243,6 +282,31 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
           <button type="button" className={mobileView === "available" ? "is-active" : ""} onClick={() => setMobileView("available")}>{t.list} <span>{totals.available}</span></button>
         </div>
 
+        <div className="booth-mobile-search">
+          <Search aria-hidden="true" />
+          <input
+            value={search}
+            inputMode="numeric"
+            onChange={(event) => { setSearch(event.target.value); setSearchMiss(false); }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                submitSearch();
+              }
+            }}
+            placeholder={t.search}
+            aria-label={t.search}
+          />
+          <button type="button" onClick={submitSearch} aria-label={t.search}><ArrowUpRight aria-hidden="true" /></button>
+        </div>
+        {searchMiss ? <p className="booth-search-miss">{t.empty}</p> : null}
+
+        <div className="booth-zone-nav" aria-label={t.hall}>
+          {zoneButtons.map((zone) => (
+            <button key={zone.code} type="button" onClick={() => centerZone(zone.code)}>{zone.label}</button>
+          ))}
+        </div>
+
         <div className={`booth-experience ${mobileView === "available" ? "show-available-list" : "show-map"}`}>
           <div className="booth-map-column">
             <div className="booth-map-controls">
@@ -261,20 +325,18 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
               </div>
 
               <div className="booth-zoom-controls">
-                <button type="button" onClick={() => setZoom((value) => Math.max(0.9, Number((value - 0.15).toFixed(2))))} aria-label={t.zoomOut}><Minus aria-hidden="true" /></button>
+                <button type="button" onClick={() => setZoom((value) => Math.max(0.85, Number((value - 0.15).toFixed(2))))} aria-label={t.zoomOut}><Minus aria-hidden="true" /></button>
                 <span>{Math.round(zoom * 100)}%</span>
                 <button type="button" onClick={() => setZoom((value) => Math.min(1.75, Number((value + 0.15).toFixed(2))))} aria-label={t.zoomIn}><Plus aria-hidden="true" /></button>
-                <button
-                  type="button"
-                  onClick={() => viewportRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-                  aria-label={t.center}
-                >
-                  <LocateFixed aria-hidden="true" />
-                </button>
+                <button type="button" onClick={() => centerZone("50")} aria-label={t.center}><LocateFixed aria-hidden="true" /></button>
               </div>
             </div>
 
             <div className="booth-map-shell">
+              <div className="booth-map-mobile-topline" aria-hidden="true">
+                <span>{t.hall}</span>
+                <small>{t.cinemaHint}</small>
+              </div>
               <div className="booth-map-ruler booth-map-ruler-top" aria-hidden="true" />
               <div className="booth-map-ruler booth-map-ruler-side" aria-hidden="true" />
               <div ref={viewportRef} className="booth-map-viewport">
@@ -286,10 +348,12 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
 
                   <div className="booth-tables" aria-hidden="true">
                     <span>{t.tables}</span>
-                    <div>{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
+                    <div>{Array.from({ length: 12 }, (_, index) => <i key={index}>{index + 1}</i>)}</div>
                   </div>
 
                   <div className="booth-entrance" aria-hidden="true"><span>{t.entrance}</span></div>
+                  <div className="booth-service-opening" aria-hidden="true" />
+                  <div className="booth-floor-total-label" aria-hidden="true">125 {t.total.toUpperCase()}</div>
                   <div className="booth-aisle booth-aisle-horizontal" aria-hidden="true" />
                   <div className="booth-aisle booth-aisle-vertical" aria-hidden="true" />
 
@@ -322,6 +386,11 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
                 </div>
               </div>
               <p className="booth-map-hint"><MapPinned aria-hidden="true" />{t.hint}</p>
+
+              <div className="booth-map-floating-legend" aria-hidden="true">
+                <span><i className="available" />{t.availableLabel}</span>
+                <span><i className="occupied" />{t.occupiedLabel}</span>
+              </div>
             </div>
           </div>
 
@@ -330,7 +399,8 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
               <Search aria-hidden="true" />
               <input
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                inputMode="numeric"
+                onChange={(event) => { setSearch(event.target.value); setSearchMiss(false); }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
@@ -342,6 +412,7 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
               />
               <button type="button" onClick={submitSearch} aria-label={t.search}><ArrowUpRight aria-hidden="true" /></button>
             </div>
+            {searchMiss ? <p className="booth-search-miss">{t.empty}</p> : null}
 
             {selectedCode && selectedStatus ? (
               <div className="booth-selected-card">
@@ -403,6 +474,43 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
           </div>
         </div>
       </div>
+
+      {selectedCode && selectedStatus ? (
+        <aside className={`booth-mobile-selection-sheet is-${selectedStatus}`} aria-live="polite">
+          <button className="booth-mobile-sheet-close" type="button" onClick={() => setSelectedCode(null)} aria-label={t.close}><X aria-hidden="true" /></button>
+          <div className="booth-mobile-sheet-handle" aria-hidden="true" />
+          <div className="booth-mobile-sheet-summary">
+            <div>
+              <small>{t.selected}</small>
+              <strong>{t.booth} {selectedCode}</strong>
+            </div>
+            <span className={`booth-selected-status is-${selectedStatus}`}>
+              {selectedStatus === "available" ? <CheckCircle2 aria-hidden="true" /> : <CircleDot aria-hidden="true" />}
+              {selectedStatus === "available" ? t.availableLabel : t.occupiedLabel}
+            </span>
+          </div>
+
+          {selectedStatus === "available" ? (
+            <div className="booth-mobile-contact-strip">
+              {contacts.map((contact) => (
+                <a key={contact.number} href={whatsappUrl(contact.number, selectedCode)} target="_blank" rel="noreferrer">
+                  <MessageCircle aria-hidden="true" />
+                  <span>
+                    <small>{locale === "es" ? contact.labelEs : contact.labelEn}</small>
+                    <strong>{contact.display}</strong>
+                  </span>
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          ) : (
+            <button className="booth-mobile-find-available" type="button" onClick={() => { setSelectedCode(null); setMobileView("available"); }}>
+              <Sparkles aria-hidden="true" />{t.available}
+              <ChevronDown aria-hidden="true" />
+            </button>
+          )}
+        </aside>
+      ) : null}
     </section>
   );
 }
