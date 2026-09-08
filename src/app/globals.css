@@ -6586,8 +6586,8 @@ html.is-showcase-dragging body {
 
 .booth-map-viewport {
   position: relative;
-  height: min(68vw, 850px);
-  min-height: 650px;
+  height: 850px;
+  min-height: 850px;
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -7262,14 +7262,16 @@ html.is-showcase-dragging body {
 
   .booth-section-intro { max-width: 720px; }
   .booth-experience { grid-template-columns: minmax(0, 1fr) 320px; }
-  .booth-map-viewport { height: 720px; min-height: 620px; }
+  /* The default 100% map now renders at 850px tall. Keep the viewport at
+     the same height so the south row (119-125) is never clipped on desktop. */
+  .booth-map-viewport { height: 850px; min-height: 850px; }
   .admin-booth-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
 @media (max-width: 860px) {
   .booth-experience { grid-template-columns: 1fr; }
   .booth-selection-panel { position: static; }
-  .booth-map-viewport { height: 650px; }
+  .booth-map-viewport { height: 850px; min-height: 850px; }
   .admin-booths-head { align-items: flex-start; flex-direction: column; }
   .admin-booth-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }

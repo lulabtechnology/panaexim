@@ -1,3 +1,14 @@
+# V3 - correccion de visualizacion al 100%
+
+Este incremental corrige el caso reportado donde, con el navegador al 100%, el plano terminaba antes de mostrar visualmente la franja sur con los stands 119-125.
+
+- El plano mantiene **100%** en su control interno, pero usa una escala base responsive para que los 125 stands entren completos en el viewport de escritorio.
+- Los stands **119, 120, 121, 122, 123, 124 y 125** siguen en sus posiciones reales y ahora quedan visibles sin tener que bajar el zoom del navegador a 85%.
+- En movil se mantiene la experiencia tactil tipo selector de cine con paneo/zoom y accesos por zonas.
+- **No hay SQL nuevo en esta V3.** No ejecutes otra migracion por este arreglo visual.
+
+---
+
 # PanaEXIM 2026 — Selector de stands Canal 1 · versión 2
 
 ## Qué corrige este incremental

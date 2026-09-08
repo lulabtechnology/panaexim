@@ -36,6 +36,12 @@ type BoothSelectionSectionProps = {
 type StatusFilter = "all" | BoothAvailability;
 type MobileView = "map" | "available";
 
+// The source floor plan is 840 x 1000. At browser zoom 100% the previous
+// 1:1 rendering was taller than the desktop viewport (850px), which hid the
+// south row 119-125 behind an internal scroll. Keep the UI zoom at 100% while
+// rendering the base plan at 85% so the complete Canal 1 plan is visible.
+const MAP_BASE_SCALE = 0.85;
+
 type BoothApiResponse = {
   booths?: Array<{ code?: unknown; status?: unknown }>;
 };
@@ -238,10 +244,11 @@ export function BoothSelectionSection({ locale }: BoothSelectionSectionProps) {
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
   }
 
+  const renderedScale = MAP_BASE_SCALE * zoom;
   const mapStyle: CSSProperties = {
-    width: `${Math.round(840 * zoom)}px`,
-    minWidth: `${Math.round(840 * zoom)}px`,
-    height: `${Math.round(1000 * zoom)}px`,
+    width: `${Math.round(840 * renderedScale)}px`,
+    minWidth: `${Math.round(840 * renderedScale)}px`,
+    height: `${Math.round(1000 * renderedScale)}px`,
   };
 
   const zoneButtons = [
