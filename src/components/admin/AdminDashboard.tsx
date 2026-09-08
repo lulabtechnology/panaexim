@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { BoothAvailability, BoothStatusView } from "@/lib/booths";
 import type { Locale } from "@/lib/content";
 import type { AdminIdentity } from "@/lib/admin-auth";
 import type { ParticipantView } from "@/lib/participants";
@@ -34,6 +35,8 @@ type AdminDashboardProps = {
   locale: Locale;
   identity: AdminIdentity;
   participants: ParticipantView[];
+  booths: BoothStatusView[];
+  boothsDatabaseReady: boolean;
   supabaseConfigured: boolean;
 };
 
@@ -50,6 +53,8 @@ export function AdminDashboard({
   locale,
   identity,
   participants,
+  booths,
+  boothsDatabaseReady,
   supabaseConfigured,
 }: AdminDashboardProps) {
   const spanish = locale === "es";
@@ -60,6 +65,10 @@ export function AdminDashboard({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
+  const [boothSavingCode, setBoothSavingCode] = useState<string | null>(null);
+  const [boothQuery, setBoothQuery] = useState("");
+  const [boothFilter, setBoothFilter] = useState<"all" | BoothAvailability>("all");
+  const [localBooths, setLocalBooths] = useState(booths);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -74,6 +83,19 @@ export function AdminDashboard({
         .includes(normalized),
     );
   }, [participants, query]);
+
+  const boothTotals = useMemo(() => ({
+    available: localBooths.filter((booth) => booth.status === "available").length,
+    occupied: localBooths.filter((booth) => booth.status === "occupied").length,
+  }), [localBooths]);
+
+  const visibleBooths = useMemo(() => {
+    const normalized = boothQuery.trim().toUpperCase().replace(/\s+/g, "");
+    return localBooths.filter((booth) => {
+      if (boothFilter !== "all" && booth.status !== boothFilter) return false;
+      return !normalized || booth.code.includes(normalized);
+    });
+  }, [boothFilter, boothQuery, localBooths]);
 
   function resetNotices() {
     setMessage("");
@@ -135,6 +157,42 @@ export function AdminDashboard({
       setError(spanish ? "Error de conexión." : "Connection error.");
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function updateBoothStatus(code: string, status: BoothAvailability) {
+    resetNotices();
+    setBoothSavingCode(code);
+
+    try {
+      const response = await fetch(`/api/admin/booths/${encodeURIComponent(code)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      const body = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        setError(
+          body.error ??
+            (spanish
+              ? "No se pudo actualizar la disponibilidad del stand."
+              : "Unable to update booth availability."),
+        );
+        return;
+      }
+
+      setLocalBooths((current) =>
+        current.map((booth) => booth.code === code ? { ...booth, status } : booth),
+      );
+      setMessage(
+        spanish
+          ? `${code} ahora está ${status === "available" ? "disponible" : "ocupado"}.`
+          : `${code} is now ${status === "available" ? "available" : "occupied"}.`,
+      );
+    } catch {
+      setError(spanish ? "Error de conexión." : "Connection error.");
+    } finally {
+      setBoothSavingCode(null);
     }
   }
 
@@ -359,6 +417,89 @@ export function AdminDashboard({
           </form>
         </div>
       </div>
+
+      <section className="admin-booths-card">
+        <div className="admin-booths-head">
+          <div>
+            <p className="eyebrow">{spanish ? "Canal 1 · Plano comercial" : "Canal 1 · Commercial floor plan"}</p>
+            <h2>{spanish ? "Disponibilidad de stands" : "Booth availability"}</h2>
+            <p>
+              {spanish
+                ? "Marca cada stand como Disponible u Ocupado. El cambio se refleja en el mapa público de /es y /en sin mostrar nombres de expositores."
+                : "Mark every booth as Available or Occupied. The change is reflected on the public /es and /en map without exposing exhibitor names."}
+            </p>
+          </div>
+          <div className="admin-booth-totals">
+            <span className="available"><strong>{boothTotals.available}</strong><small>{spanish ? "Disponibles" : "Available"}</small></span>
+            <span className="occupied"><strong>{boothTotals.occupied}</strong><small>{spanish ? "Ocupados" : "Occupied"}</small></span>
+          </div>
+        </div>
+
+        {!boothsDatabaseReady ? (
+          <p className="admin-booths-warning">
+            {spanish
+              ? "El mapa está usando la disponibilidad inicial. Para habilitar cambios desde este panel, ejecuta supabase/migrations/202609080001_booths.sql en Supabase."
+              : "The map is using its initial availability. To enable edits from this panel, run supabase/migrations/202609080001_booths.sql in Supabase."}
+          </p>
+        ) : null}
+
+        <div className="admin-booth-toolbar">
+          <label className="admin-search">
+            <Search aria-hidden="true" />
+            <input
+              type="search"
+              value={boothQuery}
+              onChange={(event) => setBoothQuery(event.target.value)}
+              placeholder={spanish ? "Buscar stand, ej. E12" : "Search booth, e.g. E12"}
+            />
+          </label>
+          <div className="admin-booth-filter" role="group" aria-label={spanish ? "Filtrar stands" : "Filter booths"}>
+            {(["all", "available", "occupied"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={boothFilter === option ? "is-active" : ""}
+                onClick={() => setBoothFilter(option)}
+              >
+                {option === "all"
+                  ? (spanish ? "Todos" : "All")
+                  : option === "available"
+                    ? (spanish ? "Disponibles" : "Available")
+                    : (spanish ? "Ocupados" : "Occupied")}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-booth-grid">
+          {visibleBooths.map((booth) => {
+            const nextStatus: BoothAvailability = booth.status === "available" ? "occupied" : "available";
+            return (
+              <button
+                key={booth.code}
+                type="button"
+                className={`admin-booth-card is-${booth.status}`}
+                onClick={() => updateBoothStatus(booth.code, nextStatus)}
+                disabled={boothSavingCode === booth.code || !boothsDatabaseReady}
+                aria-label={
+                  spanish
+                    ? `${booth.code}: ${booth.status === "available" ? "Disponible" : "Ocupado"}. Cambiar a ${nextStatus === "available" ? "Disponible" : "Ocupado"}.`
+                    : `${booth.code}: ${booth.status}. Change to ${nextStatus}.`
+                }
+              >
+                <strong>{booth.code}</strong>
+                <span>
+                  {boothSavingCode === booth.code
+                    ? (spanish ? "Guardando..." : "Saving...")
+                    : booth.status === "available"
+                      ? (spanish ? "Disponible" : "Available")
+                      : (spanish ? "Ocupado" : "Occupied")}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="admin-settings-card">
         <div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BoothSelectionSection } from "@/components/BoothSelectionSection";
 import { CinematicEventShowcase } from "@/components/CinematicEventShowcase";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
@@ -76,6 +77,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <CinematicEventShowcase locale={locale} heading={copy.eventsHeading} events={copy.events} />
         <VisionSection locale={locale} about={copy.about} leadership={copy.leadership} events={copy.events} />
         <OpportunitiesSection locale={locale} opportunities={copy.opportunities} />
+        <BoothSelectionSection locale={locale} />
         <ParticipantsTeaser locale={locale} participants={copy.participants} />
         <VenueSection locale={locale} venue={copy.venue} />
         <ContactSection locale={locale} contact={copy.contact} />
