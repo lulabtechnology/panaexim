@@ -8063,7 +8063,7 @@ html.is-showcase-dragging body {
 .megapolis-map-heading {display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:1.2rem;color:#dfc184;font:500 .7rem var(--font-mono),monospace;letter-spacing:.09em;}
 .megapolis-map-heading small {font-size:.65rem;color:#a8aaa5;white-space:nowrap;}
 .megapolis-section .megapolis-viewport {height:auto;max-height:660px;min-height:0;overflow:auto;overscroll-behavior:contain;}
-.megapolis-section .megapolis-map {width:calc(100% * var(--megapolis-zoom));min-width:calc(950px * var(--megapolis-zoom));height:auto;min-height:0;aspect-ratio:2970/1550;border:0;border-radius:0;box-shadow:none;background:#101719;position:relative;}
+.megapolis-section .megapolis-map {width:calc(100% * var(--megapolis-zoom));min-width:100%;height:auto;min-height:0;aspect-ratio:3860/2820;border:0;border-radius:0;box-shadow:none;background:#101719;position:relative;}
 .megapolis-map::before {content:"";position:absolute;inset:0;background:url('/media/megapolis/plan-reference.webp') center/100% 100% no-repeat;filter:grayscale(1) invert(1);opacity:.27;pointer-events:none;}
 .megapolis-section .booth-map-item {border-radius:1px;min-width:0;min-height:0;padding:0;transform-origin:center;z-index:1;font-size:clamp(9px,.8vw,13px);border-width:1px;box-shadow:none;}
 .megapolis-section .booth-map-item.is-unconfirmed {color:#f4e8c7;background:#353b35;border-color:#b9a46d;}
@@ -8078,3 +8078,5 @@ html.is-showcase-dragging body {
 .admin-booth-card.is-unconfirmed {border-color:#b9a46d;color:#d9c18b;}
 @media(max-width:1000px){.megapolis-section .booth-experience{grid-template-columns:1fr;}.megapolis-section .booth-selection-panel{display:block;}.megapolis-section .megapolis-viewport{max-height:510px;}.megapolis-section .booth-map-controls{flex-wrap:wrap;gap:.7rem;}}
 @media(max-width:600px){.megapolis-section .booth-zone-nav{display:flex;overflow-x:auto;}.megapolis-map-heading{flex-direction:column;align-items:flex-start;gap:.35rem;}.megapolis-section .booth-filter-group{flex-wrap:wrap;}.megapolis-section .megapolis-map{min-width:calc(840px * var(--megapolis-zoom));}.megapolis-section .booth-map-item{font-size:10px;}.megapolis-section .booth-selection-panel{padding:1.2rem;}.megapolis-section .booth-selected-code{font-size:4rem;}}
+
+.megapolis-area-label{position:absolute;z-index:2;pointer-events:none;color:#ead2a2;background:#172126e8;border:1px solid #a18b5a55;border-radius:4px;padding:4px 6px;font-size:10px;line-height:1.2;transform:translate(-50%,-50%);white-space:nowrap;}

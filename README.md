@@ -8,6 +8,8 @@ Las posiciones se calibran desde el PDF usando el módulo de 3 m. Las dimensione
 
 Fecha y sede se centralizan en `src/lib/event.ts`. El croquis se define en `src/lib/booths.ts`; el PDF de referencia está en `public/media/megapolis/source-plan.pdf`.
 
+La revisión del plano completo incorpora Foyer 1, Foyer 2, hall, lobby, recepción, ascensores, café, bar, baños, escaleras y rampa. El recorrido comienza en el pasillo frente a los stands 1–3; el selector de zonas permite visitar las áreas comunes. La copia autónoma del 3D está versionada en `public/media/megapolis/tour.html` y se publica también en `3dmodeling.panaeximexpo.com`.
+
 Validación: `npm run verify` (comprobación estática, TypeScript, ESLint y compilación Next.js).
 
 ---
