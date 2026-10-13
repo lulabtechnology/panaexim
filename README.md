@@ -10,6 +10,8 @@ Fecha y sede se centralizan en `src/lib/event.ts`. El croquis se define en `src/
 
 La revisión del plano completo incorpora Foyer 1, Foyer 2, hall, lobby, recepción, ascensores, café, bar, baños, escaleras y rampa. El recorrido comienza en el pasillo frente a los stands 1–3; el selector de zonas permite visitar las áreas comunes. La copia autónoma del 3D está versionada en `public/media/megapolis/tour.html` y se publica también en `3dmodeling.panaeximexpo.com`.
 
+El 3D conecta los pilares y cerramientos con la cubierta, incorpora cielos rasos en las zonas comunes y conserva la doble altura del acceso. Los encuentros, las luminarias, las barandas y el mobiliario se revisan desde el recorrido. Las barras siguen sus proporciones en el PDF; los acabados mantienen la paleta de los stands.
+
 Validación: `npm run verify` (comprobación estática, TypeScript, ESLint y compilación Next.js).
 
 ---
