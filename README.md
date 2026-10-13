@@ -12,7 +12,11 @@ La revisión del plano completo incorpora Foyer 1, Foyer 2, hall, lobby, recepci
 
 El 3D conecta los pilares y cerramientos con la cubierta, incorpora cielos rasos en las zonas comunes y conserva la doble altura del acceso. Los encuentros, las luminarias, las barandas y el mobiliario se revisan desde el recorrido. Las barras siguen sus proporciones en el PDF; los acabados mantienen la paleta de los stands.
 
+Los reflejos usan una textura de mayor resolución con un filtro suave; la calidad máxima incorpora sobremuestreo. Los muros compartidos se dibujan una sola vez y los zócalos terminan antes de las bases de los pilares. Se añaden seis paneles de pared con el logo oficial, marcos dorados, separación de montaje y un halo cálido.
+
 Validación: `npm run verify` (comprobación estática, TypeScript, ESLint y compilación Next.js).
+
+La compilación de producción usa Webpack para evitar el error del cargador de fuentes de Turbopack en Vercel con Next.js 16.2.12. Se conservan las mismas fuentes y el modo de desarrollo existente.
 
 ---
 
