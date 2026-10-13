@@ -14,6 +14,8 @@ El 3D conecta los pilares y cerramientos con la cubierta, incorpora cielos rasos
 
 Los reflejos usan una textura de mayor resolución con un filtro suave; la calidad máxima incorpora sobremuestreo. Los muros compartidos se dibujan una sola vez y los zócalos terminan antes de las bases de los pilares. Se añaden seis paneles de pared con el logo oficial, marcos dorados, separación de montaje y un halo cálido.
 
+La escalera del café y la rampa ocupan carriles separados del croquis y conectan con un descanso común. Los pasamanos siguen las pendientes, sus postes apoyan en los peldaños o el pavimento, y la rampa conserva su acceso inferior desde el bar. El selector incluye una vista de esta unión; los diez puntos de visita y las aproximaciones a los 77 stands permanecen libres.
+
 Validación: `npm run verify` (comprobación estática, TypeScript, ESLint y compilación Next.js).
 
 La compilación de producción usa Webpack para evitar el error del cargador de fuentes de Turbopack en Vercel con Next.js 16.2.12. Se conservan las mismas fuentes y el modo de desarrollo existente.
