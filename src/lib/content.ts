@@ -193,13 +193,13 @@ export const content: Record<Locale, SiteContent> = {
       menu: "Abrir menú",
     },
     hero: {
-      eyebrow: "Panamá · 23–26 noviembre 2026",
+      eyebrow: "Panamá · 23–25 febrero 2027",
       title: "PanaEXIM",
       tagline: "4 Events. Infinite Opportunities.",
       description:
         "Cuatro exposiciones internacionales convergen en Panamá para conectar industrias, empresas, compradores, instituciones y líderes globales.",
-      date: "23–26 de noviembre de 2026 · 10:00 a. m.–6:00 p. m.",
-      venue: "Panama Convention Center · Amador, Ciudad de Panamá",
+      date: "23–25 de febrero de 2027 · 10:00 a. m.–6:00 p. m.",
+      venue: "Megapolis Convention Center · Avenida Balboa, Ciudad de Panamá",
       primaryCta: "Participar como exhibidor",
       secondaryCta: "Explorar los eventos",
       countdown: ["Días", "Horas", "Minutos", "Segundos"],
@@ -209,10 +209,10 @@ export const content: Record<Locale, SiteContent> = {
       eyebrow: "Una plataforma. Cuatro industrias.",
       title: "El punto de encuentro internacional para nuevas oportunidades.",
       body:
-        "PanaEXIM es la organización líder detrás de cuatro exposiciones internacionales que reúnen sectores estratégicos en una misma sede durante cuatro días. Conectamos mercados, impulsamos oportunidades comerciales y posicionamos a Panamá como un destino global para los negocios, la innovación y la inversión.",
+        "PanaEXIM es la organización líder detrás de cuatro exposiciones internacionales que reúnen sectores estratégicos en una misma sede durante tres días. Conectamos mercados, impulsamos oportunidades comerciales y posicionamos a Panamá como un destino global para los negocios, la innovación y la inversión.",
       stats: [
         { value: "04", label: "Eventos internacionales" },
-        { value: "04", label: "Días de conexiones" },
+        { value: "03", label: "Días de conexiones" },
         { value: "01", label: "Destino global" },
       ],
     },
@@ -302,20 +302,20 @@ export const content: Record<Locale, SiteContent> = {
     },
     venue: {
       eyebrow: "Un destino conectado con el mundo",
-      title: "Panama Convention Center",
+      title: "Megapolis Convention Center",
       body:
-        "Una sede moderna en Amador, Ciudad de Panamá, preparada para recibir exposiciones internacionales, reuniones profesionales y grandes montajes.",
+        "Una sede moderna en Avenida Balboa, Ciudad de Panamá, preparada para recibir exposiciones internacionales, reuniones profesionales y grandes montajes.",
       airportTitle: "Desde Tocumen",
       airportBody: "Taxi, transporte por aplicación o traslado privado. El tiempo estimado depende del tráfico.",
       cityTitle: "Desde la ciudad",
-      cityBody: "Acceso por las principales vías hacia Amador y el área del Canal.",
+      cityBody: "Acceso por Avenida Balboa y las vías del centro de Ciudad de Panamá, hacia Megapolis Convention Center.",
       lodgingTitle: "Zonas recomendadas",
       lodgingBody: "Casco Antiguo, Punta Pacífica, Paitilla, Obarrio, San Francisco y áreas céntricas.",
       mapCta: "Abrir en Google Maps",
     },
     contact: {
       eyebrow: "Contacto oficial",
-      title: "Construyamos su participación en PanaEXIM 2026.",
+      title: "Construyamos su participación en PanaEXIM 2027.",
       body:
         "Solicite información sobre exhibición, visitas profesionales, alianzas, prensa o documentación de los eventos.",
       panama: "Contacto Panamá",
@@ -365,13 +365,13 @@ export const content: Record<Locale, SiteContent> = {
       menu: "Open menu",
     },
     hero: {
-      eyebrow: "Panama · November 23–26, 2026",
+      eyebrow: "Panama · February 23–25, 2027",
       title: "PanaEXIM",
       tagline: "4 Events. Infinite Opportunities.",
       description:
         "Four international exhibitions converge in Panama to connect industries, companies, buyers, institutions and global leaders.",
-      date: "November 23–26, 2026 · 10:00 a.m.–6:00 p.m.",
-      venue: "Panama Convention Center · Amador, Panama City",
+      date: "February 23–25, 2027 · 10:00 a.m.–6:00 p.m.",
+      venue: "Megapolis Convention Center · Avenida Balboa, Panama City",
       primaryCta: "Become an exhibitor",
       secondaryCta: "Explore the events",
       countdown: ["Days", "Hours", "Minutes", "Seconds"],
@@ -381,10 +381,10 @@ export const content: Record<Locale, SiteContent> = {
       eyebrow: "One platform. Four industries.",
       title: "The international meeting point for new opportunities.",
       body:
-        "PanaEXIM is the leading organization behind four international exhibitions bringing strategic sectors together in one venue for four days. We connect markets, accelerate commercial opportunities and position Panama as a global destination for business, innovation and investment.",
+        "PanaEXIM is the leading organization behind four international exhibitions bringing strategic sectors together in one venue for three days. We connect markets, accelerate commercial opportunities and position Panama as a global destination for business, innovation and investment.",
       stats: [
         { value: "04", label: "International events" },
-        { value: "04", label: "Days of connections" },
+        { value: "03", label: "Days of connections" },
         { value: "01", label: "Global destination" },
       ],
     },
@@ -474,20 +474,20 @@ export const content: Record<Locale, SiteContent> = {
     },
     venue: {
       eyebrow: "A destination connected to the world",
-      title: "Panama Convention Center",
+      title: "Megapolis Convention Center",
       body:
-        "A modern venue in Amador, Panama City, prepared for international exhibitions, professional meetings and large-scale installations.",
+        "A modern venue in Avenida Balboa, Panama City, prepared for international exhibitions, professional meetings and large-scale installations.",
       airportTitle: "From Tocumen",
       airportBody: "Taxi, ride-hailing service or private transfer. Estimated travel time depends on traffic.",
       cityTitle: "From the city",
-      cityBody: "Access through the main roads leading to Amador and the Canal area.",
+      cityBody: "Access via Avenida Balboa and the main roads in central Panama City, towards Megapolis Convention Center.",
       lodgingTitle: "Recommended areas",
       lodgingBody: "Casco Antiguo, Punta Pacifica, Paitilla, Obarrio, San Francisco and central districts.",
       mapCta: "Open in Google Maps",
     },
     contact: {
       eyebrow: "Official contact",
-      title: "Let us build your participation in PanaEXIM 2026.",
+      title: "Let us build your participation in PanaEXIM 2027.",
       body:
         "Request information about exhibiting, professional visits, partnerships, media or event documentation.",
       panama: "Panama contact",

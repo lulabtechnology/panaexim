@@ -1,67 +1,13 @@
 import "server-only";
 
-import {
-  getDefaultBoothStatuses,
-  isBoothAvailability,
-  isValidBoothCode,
-  normalizeBoothCode,
-  type BoothStatusView,
-} from "@/lib/booths";
-import { createServiceClient } from "@/lib/supabase/admin";
-import { isSupabaseServiceConfigured } from "@/lib/supabase/config";
-
-type StoredBooth = {
-  code: string;
-  status: string;
-  updated_at: string | null;
-};
+import { getDefaultBoothStatuses, type BoothStatusView } from "@/lib/booths";
 
 export type BoothStoreResult = {
   booths: BoothStatusView[];
   databaseReady: boolean;
 };
 
-function mergeStoredBooths(records: StoredBooth[]): BoothStatusView[] {
-  const stored = new Map(
-    records
-      .filter((record) => isValidBoothCode(record.code) && isBoothAvailability(record.status))
-      .map((record) => [normalizeBoothCode(record.code), record]),
-  );
-
-  return getDefaultBoothStatuses().map((fallback) => {
-    const record = stored.get(fallback.code);
-    if (!record || !isBoothAvailability(record.status)) return fallback;
-    return {
-      code: fallback.code,
-      status: record.status,
-      updated_at: record.updated_at ?? null,
-    };
-  });
-}
-
+// The February 2027 floor plan is visual; availability is confirmed by the organizers.
 export async function getBoothStore(): Promise<BoothStoreResult> {
-  if (!isSupabaseServiceConfigured()) {
-    return { booths: getDefaultBoothStatuses(), databaseReady: false };
-  }
-
-  const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from("booths")
-    .select("code, status, updated_at")
-    .order("code", { ascending: true });
-
-  if (error) {
-    console.error("Unable to load booth availability:", error.message);
-    return { booths: getDefaultBoothStatuses(), databaseReady: false };
-  }
-
-  const records = (data ?? []) as StoredBooth[];
-  const validBoothCount = new Set(
-    records.filter((record) => isValidBoothCode(record.code)).map((record) => normalizeBoothCode(record.code)),
-  ).size;
-
-  return {
-    booths: mergeStoredBooths(records),
-    databaseReady: validBoothCount === 125,
-  };
+  return { booths: getDefaultBoothStatuses(), databaseReady: false };
 }

@@ -14,7 +14,7 @@ export default async function TermsPage({ params }: LegalPageProps) {
     <main className="legal-page">
       <div className="container legal-inner">
         <Link href={`/${locale}`} className="back-link"><ArrowLeft />{spanish ? "Volver" : "Back"}</Link>
-        <p className="eyebrow">PanaEXIM 2026</p>
+        <p className="eyebrow">PanaEXIM 2027</p>
         <h1>{spanish ? "Términos de uso" : "Terms of use"}</h1>
         <p className="legal-lead">
           {spanish

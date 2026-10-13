@@ -1,3 +1,17 @@
+## Edición febrero 2027
+
+Fechas: 23-25 de febrero de 2027. Sede: Megapolis Convention Center, Ciudad de Panamá.
+
+El croquis es visual y reproduce los 77 stands del plano EXPOJOYERIA suministrado por la organización. Cada módulo mide 3 × 3 m (9 m²). La disponibilidad se confirma con la organización y no requiere Supabase. Los estados de ocupación del recinto anterior no se trasladan al nuevo plano.
+
+Las posiciones se calibran desde el PDF usando el módulo de 3 m. Las dimensiones generales del salón y su contorno 3D requieren contraste con un plano arquitectónico acotado; el mapa público del hotel no aporta cotas suficientes.
+
+Fecha y sede se centralizan en `src/lib/event.ts`. El croquis se define en `src/lib/booths.ts`; el PDF de referencia está en `public/media/megapolis/source-plan.pdf`.
+
+Validación: `npm run verify` (comprobación estática, TypeScript, ESLint y compilación Next.js).
+
+---
+
 # PanaEXIM 2026 — Fase 8.1
 
 Web bilingüe oficial de **PanaEXIM 2026 — 4 Events. Infinite Opportunities.**

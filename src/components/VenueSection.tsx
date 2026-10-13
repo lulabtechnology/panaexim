@@ -41,7 +41,7 @@ export function VenueSection({ locale, venue }: VenueSectionProps) {
 
           <a
             className="button button-ghost"
-            href="https://www.google.com/maps/search/?api=1&query=Panama+Convention+Center"
+            href="https://www.google.com/maps/search/?api=1&query=Megapolis+Convention+Center+Panama"
             target="_blank"
             rel="noreferrer"
           >
@@ -56,19 +56,19 @@ export function VenueSection({ locale, venue }: VenueSectionProps) {
               <Building2 aria-hidden="true" />
             </span>
             <div>
-              <strong>Panama Convention Center</strong>
-              <small>{locale === "es" ? "Amador · Ciudad de Panamá" : "Amador · Panama City"}</small>
+              <strong>Megapolis Convention Center</strong>
+              <small>{locale === "es" ? "Avenida Balboa · Ciudad de Panamá" : "Avenida Balboa · Panama City"}</small>
             </div>
           </div>
           <iframe
-            title={locale === "es" ? "Mapa del Panama Convention Center" : "Panama Convention Center map"}
+            title={locale === "es" ? "Mapa del Megapolis Convention Center" : "Megapolis Convention Center map"}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Panama+Convention+Center&output=embed"
+            src="https://www.google.com/maps?q=Megapolis+Convention+Center+Panama&output=embed"
           />
           <div className="venue-date-strip">
-            <strong>23–26</strong>
-            <span>NOV 2026</span>
+            <strong>23–25</strong>
+            <span>FEB 2027</span>
             <small>10:00–18:00</small>
           </div>
         </div>

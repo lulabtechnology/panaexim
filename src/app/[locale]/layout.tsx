@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   openGraph: {
     type: "website",
-    siteName: "PanaEXIM 2026",
-    images: [{ url: "/media/phase8/hero/panaexim-og.webp", width: 1600, height: 900, alt: "PanaEXIM 2026" }],
+    siteName: "PanaEXIM 2027",
+    images: [{ url: "/media/phase8/hero/panaexim-og.webp", width: 1600, height: 900, alt: "PanaEXIM 2027" }],
   },
   twitter: { card: "summary_large_image", images: ["/media/phase8/hero/panaexim-og.webp"] },
   icons: {

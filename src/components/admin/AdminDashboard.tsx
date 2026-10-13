@@ -87,6 +87,7 @@ export function AdminDashboard({
   const boothTotals = useMemo(() => ({
     available: localBooths.filter((booth) => booth.status === "available").length,
     occupied: localBooths.filter((booth) => booth.status === "occupied").length,
+    unconfirmed: localBooths.filter((booth) => booth.status === "unconfirmed").length,
   }), [localBooths]);
 
   const visibleBooths = useMemo(() => {
@@ -423,7 +424,7 @@ export function AdminDashboard({
       <section className="admin-booths-card">
         <div className="admin-booths-head">
           <div>
-            <p className="eyebrow">{spanish ? "Canal 1 · Plano comercial" : "Canal 1 · Commercial floor plan"}</p>
+            <p className="eyebrow">{spanish ? "Megapolis · Plano comercial" : "Megapolis · Commercial floor plan"}</p>
             <h2>{spanish ? "Disponibilidad de stands" : "Booth availability"}</h2>
             <p>
               {spanish
@@ -434,14 +435,15 @@ export function AdminDashboard({
           <div className="admin-booth-totals">
             <span className="available"><strong>{boothTotals.available}</strong><small>{spanish ? "Disponibles" : "Available"}</small></span>
             <span className="occupied"><strong>{boothTotals.occupied}</strong><small>{spanish ? "Ocupados" : "Occupied"}</small></span>
+            <span><strong>{boothTotals.unconfirmed}</strong><small>{spanish ? "Por confirmar" : "To be confirmed"}</small></span>
           </div>
         </div>
 
         {!boothsDatabaseReady ? (
           <p className="admin-booths-warning">
             {spanish
-              ? "El mapa está usando la disponibilidad inicial. Para habilitar cambios desde este panel, ejecuta la migración nueva supabase/migrations/202609080002_booths_numbering_125.sql en Supabase."
-              : "The map is using its initial availability. To enable edits from this panel, run the new supabase/migrations/202609080002_booths_numbering_125.sql migration in Supabase."}
+              ? "El mapa está usando la disponibilidad inicial. Para habilitar cambios desde este panel, ejecuta la migración nueva supabase/migrations/202610130001_megapolis_booths.sql en Supabase."
+              : "The map is using its initial availability. To enable edits from this panel, run the new supabase/migrations/202610130001_megapolis_booths.sql migration in Supabase."}
           </p>
         ) : null}
 
@@ -452,7 +454,7 @@ export function AdminDashboard({
               type="search"
               value={boothQuery}
               onChange={(event) => setBoothQuery(event.target.value)}
-              placeholder={spanish ? "Buscar stand, ej. 85" : "Search booth, e.g. 85"}
+              placeholder={spanish ? "Buscar stand, ej. 25" : "Search booth, e.g. 25"}
             />
           </label>
           <div className="admin-booth-filter" role="group" aria-label={spanish ? "Filtrar stands" : "Filter booths"}>
@@ -485,7 +487,7 @@ export function AdminDashboard({
                 disabled={boothSavingCode === booth.code || !boothsDatabaseReady}
                 aria-label={
                   spanish
-                    ? `Stand ${booth.code}: ${booth.status === "available" ? "Disponible" : "Ocupado"}. Cambiar a ${nextStatus === "available" ? "Disponible" : "Ocupado"}.`
+                    ? `Stand ${booth.code}: ${booth.status === "available" ? "Disponible" : booth.status === "occupied" ? "Ocupado" : "Por confirmar"}. Cambiar a ${nextStatus === "available" ? "Disponible" : "Ocupado"}.`
                     : `Booth ${booth.code}: ${booth.status}. Change to ${nextStatus}.`
                 }
               >
@@ -493,6 +495,8 @@ export function AdminDashboard({
                 <span>
                   {boothSavingCode === booth.code
                     ? (spanish ? "Guardando..." : "Saving...")
+                    : booth.status === "unconfirmed"
+                      ? (spanish ? "Por confirmar" : "To be confirmed")
                     : booth.status === "available"
                       ? (spanish ? "Disponible" : "Available")
                       : (spanish ? "Ocupado" : "Occupied")}

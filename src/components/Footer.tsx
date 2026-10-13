@@ -26,8 +26,8 @@ export function Footer({ locale, footer }: FooterProps) {
             height={506}
           />
           <p>{footer.description}</p>
-          <strong>23–26 NOV 2026</strong>
-          <span>Panama Convention Center</span>
+          <strong>23–25 FEB 2027</strong>
+          <span>Megapolis Convention Center</span>
         </div>
 
         <div>
@@ -50,7 +50,7 @@ export function Footer({ locale, footer }: FooterProps) {
       </div>
 
       <div className="container footer-bottom">
-        <p>© 2026 PanaEXIM. {footer.rights}</p>
+        <p>© {new Date().getFullYear()} PanaEXIM. {footer.rights}</p>
         <p>{footer.credit}</p>
       </div>
     </footer>

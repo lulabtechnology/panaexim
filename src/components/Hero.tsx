@@ -146,8 +146,8 @@ export function Hero({ locale, hero, events }: HeroProps) {
           </h1>
           <p className="px-hero-description px-hero-reveal">{hero.description}</p>
           <div className="px-hero-date px-hero-reveal">
-            <strong>23—26 NOV 2026</strong>
-            <span>Panama Convention Center</span>
+            <strong>23—25 FEB 2027</strong>
+            <span>Megapolis Convention Center</span>
           </div>
           <a className="px-text-link px-hero-reveal" href="#events">
             {hero.secondaryCta}
@@ -185,7 +185,7 @@ export function Hero({ locale, hero, events }: HeroProps) {
         <span className="px-countdown-label">{hero.eyebrow}</span>
         <Countdown
           labels={hero.countdown}
-          ariaLabel={spanish ? "Cuenta regresiva para PanaEXIM 2026" : "Countdown to PanaEXIM 2026"}
+          ariaLabel={spanish ? "Cuenta regresiva para PanaEXIM 2027" : "Countdown to PanaEXIM 2027"}
         />
         <a href="#events" aria-label={hero.scroll}>
           <ArrowDown aria-hidden="true" />

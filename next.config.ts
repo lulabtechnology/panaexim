@@ -23,6 +23,8 @@ const privateRouteHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  turbopack: { root: process.cwd() },
+  outputFileTracingRoot: process.cwd(),
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

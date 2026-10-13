@@ -58,8 +58,8 @@ export default async function ParticipantsPage({ params }: ParticipantsPageProps
                 <h1>{copy.participants.title}</h1>
                 <p>
                   {spanish
-                    ? "Directorio privado de empresas confirmadas en el ecosistema PanaEXIM 2026."
-                    : "Private directory of confirmed companies across the PanaEXIM 2026 ecosystem."}
+                    ? "Directorio privado de empresas confirmadas en el ecosistema PanaEXIM 2027."
+                    : "Private directory of confirmed companies across the PanaEXIM 2027 ecosystem."}
                 </p>
               </div>
               <ParticipantsLogout locale={locale} />

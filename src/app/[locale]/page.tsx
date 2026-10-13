@@ -23,10 +23,10 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   const { locale: requestedLocale } = await params;
   const locale = isLocale(requestedLocale) ? requestedLocale : "es";
   const spanish = locale === "es";
-  const title = "PanaEXIM 2026 — 4 Events. Infinite Opportunities.";
+  const title = "PanaEXIM 2027 — 4 Events. Infinite Opportunities.";
   const description = spanish
-    ? "Cuatro exposiciones internacionales convergen en Panamá del 23 al 26 de noviembre de 2026."
-    : "Four international exhibitions converge in Panama from November 23–26, 2026.";
+    ? "Cuatro exposiciones internacionales convergen en Panamá del 23 al 25 de febrero de 2027."
+    : "Four international exhibitions converge in Panama from February 23–25, 2027.";
 
   return {
     title: { absolute: title },
@@ -34,11 +34,11 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
     alternates: { canonical: `/${spanish ? "es" : "en"}`, languages: { es: "/es", en: "/en" } },
     openGraph: {
       type: "website",
-      siteName: "PanaEXIM 2026",
+      siteName: "PanaEXIM 2027",
       title,
       description,
       locale: spanish ? "es_PA" : "en_US",
-      images: [{ url: "/media/phase8/hero/panaexim-og.webp", width: 1600, height: 900, alt: "PanaEXIM 2026" }],
+      images: [{ url: "/media/phase8/hero/panaexim-og.webp", width: 1600, height: 900, alt: "PanaEXIM 2027" }],
     },
     twitter: {
       card: "summary_large_image",
@@ -58,13 +58,13 @@ export default async function HomePage({ params }: HomePageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ExhibitionEvent",
-    name: "PanaEXIM 2026",
+    name: "PanaEXIM 2027",
     description: copy.hero.description,
-    startDate: "2026-11-23T10:00:00-05:00",
-    endDate: "2026-11-26T18:00:00-05:00",
+    startDate: "2027-02-23T10:00:00-05:00",
+    endDate: "2027-02-25T18:00:00-05:00",
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    location: { "@type": "Place", name: "Panama Convention Center", address: { "@type": "PostalAddress", addressLocality: "Panama City", addressCountry: "PA" } },
+    location: { "@type": "Place", name: "Megapolis Convention Center", address: { "@type": "PostalAddress", addressLocality: "Panama City", addressCountry: "PA" } },
     organizer: { "@type": "Organization", name: "PanaEXIM" },
   };
 

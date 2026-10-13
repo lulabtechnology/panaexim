@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { eventDetails } from "@/lib/event";
 
 type CountdownProps = {
   labels: [string, string, string, string];
   ariaLabel: string;
 };
 
-const target = new Date("2026-11-23T10:00:00-05:00").getTime();
+const target = new Date(eventDetails.start).getTime();
 
 function calculate() {
   const difference = Math.max(0, target - Date.now());
@@ -23,9 +24,12 @@ export function Countdown({ labels, ariaLabel }: CountdownProps) {
   const [values, setValues] = useState<number[] | null>(null);
 
   useEffect(() => {
-    setValues(calculate());
+    const firstFrame = window.requestAnimationFrame(() => setValues(calculate()));
     const timer = window.setInterval(() => setValues(calculate()), 1000);
-    return () => window.clearInterval(timer);
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.clearInterval(timer);
+    };
   }, []);
 
   return (
